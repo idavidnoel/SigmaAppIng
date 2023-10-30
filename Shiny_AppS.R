@@ -1,5 +1,5 @@
 # Install required packages if not already installed
-install.packages(c("shiny", "PLNmodels", "knitr", "purrr", "DT", "shinyjs","DT","corrplot", "patchwork","cowplot","ggplot2","gridExtra","reshape2", "ape", "stats", "xtable", "plotly", "vegan", "tidyverse", "imputeTS", "imputeMissings", "compositions", "zCompositions"))
+#install.packages(c("shiny", "PLNmodels", "knitr", "purrr", "DT", "shinyjs","DT","corrplot", "patchwork","cowplot","ggplot2","gridExtra","reshape2", "ape", "stats", "xtable", "plotly", "vegan", "tidyverse", "imputeTS", "imputeMissings", "compositions", "zCompositions"))
 
 library(shiny)
 library(ape)
