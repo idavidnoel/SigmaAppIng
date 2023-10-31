@@ -49,7 +49,7 @@ ui <- navbarPage(
       sidebarPanel(
         div(
           tags$span("Upload Data File (CSV format)", style = "font-size: 18px;font-weight: 700;"),
-          tags$p("n*p dataframe needed as input file (n=sample, p=OTUs/taxa)", style = "font-size: 14px;")
+          tags$p("n*p data needed as input file (n samples, p measures/sample) with row and column names", style = "font-size: 14px;")
         ),
         tags$style(HTML("
       .custom-file-upload {
@@ -89,7 +89,7 @@ ui <- navbarPage(
         div(
           style = "border: 1px solid #ddd; padding: 10px; margin-top: 10px;",
           tags$h4("Preprocessing Steps"),
-          selectInput("type", label = tags$span("Data type", style = "font-size: 17px;"), choices = c("Raw", "Relative"), selected = "Relative"),
+          selectInput("type", label = tags$span("Initial data type", style = "font-size: 17px;"), choices = c("Raw", "Relative"), selected = "Relative"),
           selectInput("imputation", label = tags$span("Data Imputation", style = "font-size: 17px;"), choices = c("None", "Constant", "GBM"), selected = "None"),
           conditionalPanel(
             condition = "input.imputation != 'None' && input.imputation != 'GBM'",
