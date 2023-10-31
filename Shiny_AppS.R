@@ -357,9 +357,9 @@ ui <- navbarPage(
 
         ),
       mainPanel(
-        tableOutput("similarityTable"),
         textOutput("text"),
-        verbatimTextOutput("matrixListOutput"),
+        tableOutput("similarityTable"),
+        #verbatimTextOutput("matrixListOutput"),
         verbatimTextOutput("NmatrixListOutput"),
         verbatimTextOutput("GmatrixListOutput")
       )
@@ -549,13 +549,13 @@ server <- function(input, output, session) {
   
   # Subset of similarity matrix
   subsetMatrix <- reactive({
-    subset(similarityMatrix(), select = c(1:3))
+    subset(similarityMatrix(), select = c(1:5))
   })
   
   # Generate similarity table
   output$similarityTable <- renderTable({
     if (!is.null(similarityMatrix())) {
-      subsetMatrixDF <- subsetMatrix()
+      subsetMatrixDF <- head(subsetMatrix(),5)
       subsetMatrixDF <- as.data.frame(subsetMatrixDF)  # Convert to data frame
       subsetMatrixDF$RowNames <- rownames(subsetMatrixDF)  # Add row names as a column
       rownames(subsetMatrixDF) <- NULL  # Remove row names from the data frame
@@ -662,7 +662,7 @@ server <- function(input, output, session) {
   # Generate text output
   output$text <- renderText({
     if (!is.null(similarityMatrix())) {
-      "Similarity matrix generated."
+      "First 5 rows and column of the similarity matrix generated."
     }
   })
   
