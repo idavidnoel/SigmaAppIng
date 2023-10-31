@@ -153,7 +153,7 @@ ui <- navbarPage(
 "),
     sidebarLayout(
       sidebarPanel(
-        checkboxGroupInput("selectedMethods", label = tags$span("Select Methods", style = "font-family: Times New Roman ; font-size: 36px; color: #FF0000;"), choices = c(
+        checkboxGroupInput("selectedMethods", label = tags$span("Select Methods", style = "font-family: Times New Roman ; font-size: 36px; color: #b30000;"), choices = c(
           "Linear Kernel", 
           "Polynomial Kernel", 
           "Gaussian Kernel", 
@@ -212,7 +212,7 @@ tabPanel(
     div(
       style="text-align:center;",
       h1(tags$span("Method justifications",
-                   style = "font-family: Times New Roman ; font-size: 42px; color: #FF0000;font-weight: 700;"))
+                   style = "font-family: Times New Roman ; font-size: 42px; color: #b30000;font-weight: 700;"))
     ),
     fluidRow(
       column(
@@ -432,7 +432,7 @@ tabPanel(
     div(
       style = "text-align: center;",
       h1(tags$span("Recapitulative Table",
-                   style = "font-family: Times New Roman; font-size: 42px; color: #FF0000; font-weight: 700;"))
+                   style = "font-family: Times New Roman; font-size: 42px; color: #b30000; font-weight: 700;"))
     ),
     div(
       style = "text-align: center;",
@@ -445,7 +445,7 @@ tabPanel(
     div(
       style = "text-align: center;",
       h2(tags$span("Legend",
-                   style = "font-family: Times New Roman; font-size: 42px; color: #FF0000; font-weight: 700;"))
+                   style = "font-family: Times New Roman; font-size: 42px; color: #b30000; font-weight: 700;"))
     ),
     div(
       style = "text-align: center;",
