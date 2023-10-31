@@ -41,257 +41,7 @@ ui <- navbarPage(
   ),
   shinyjs::useShinyjs(),
   
-  # Page 1: Method Justifications
-  tabPanel(
-    "Method Justifications",
-    fluidPage(
-      useShinyjs(),  # Add useShinyjs()
-      div(
-        style="text-align:center;",
-        h1(tags$span("Method justifications",
-                     style = "font-family: Times New Roman ; font-size: 42px; color: #FF0000;font-weight: 700;"))
-      ),
-      fluidRow(
-        column(
-          width = 10,
-          tags$h2("Linear Kernel (LK)",
-                  style = "font-size:26px; text-decoration:underline;"),
-          shinyjs::hidden(
-            tags$p("Also known as the cross product or Ross matrix, the linear kernel is a suitable choice when the data exhibits a linear pattern. It works well when the data change proportionally.",
-                   tags$br(),
-                   tags$br(),
-                   tags$strong("Ross et al., 2013:"), " ", tags$em("Metagenomic Predictions: From Microbiome to Complex Health and Environmental Phenotypes in Humans and Cattle"),
-                   tags$br(),
-                   tags$strong(tags$a("https://doi.org/10.1371/journal.pone.0073056", href = "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0073056")),
-                   tags$br(),
-                   tags$strong("Montesinos-Lopez et al., 2021:"), " ", tags$em( "A guide for kernel generalized regression methods for genomic-enabled prediction"),
-                   tags$br(),
-                   tags$strong(tags$a("https://doi.org/10.1038/s41437-021-00412-1", href = "https://www.nature.com/articles/s41437-021-00412-1")),
-                   id = "linearJustification",
-                   style = "font-size:20px;")
-          ),
-          actionButton("toggleLinearButton", "Toggle Linear Justification")
-        )
-      ),
-      fluidRow(
-        column(
-          width = 10,
-          tags$h2("Polynomial Kernel (PK)",
-                  style = "font-size:26px; text-decoration:underline;"),
-          shinyjs::hidden(
-            tags$p("The polynomial kernel is preferable when the data shows nonlinear relationships. It allows us to capture intricate interactions and higher-order relationships among features.",
-                   tags$br(),
-                   tags$br(),
-                   tags$strong("Montesinos-Lopez et al., 2021:")," " , tags$em("A guide for kernel generalized regression methods for genomic-enabled prediction"),
-                   tags$br(),
-                   tags$strong(tags$a("https://doi.org/10.1038/s41437-021-00412-1", href = "https://www.nature.com/articles/s41437-021-00412-1")),
-                   tags$br(),
-                   tags$strong("He et al., 2022:"), " ", tags$em("Exploring methods to summarize gut microbiota composition for microbiability estimation and phenotypic prediction in swine"),
-                   tags$br(),
-                   tags$strong(tags$a("https://doi.org/10.1093/jas/skac231", href = "https://academic.oup.com/jas/article/100/9/skac231/6623959?login=true")),
-                   id = "polynomialJustification",
-                   style = "font-size:20px;")
-          ),
-          actionButton("togglePolynomialButton", "Toggle Polynomial Justification")
-        )
-      ),
-      fluidRow(
-        column(
-          width = 10,
-          tags$h2("Gaussian Kernel (GK)",
-                  style = "font-size:26px; text-decoration:underline;"),
-          shinyjs::hidden(
-            tags$p("The Gaussian kernel is a suitable choice when the data exhibits a Gaussian-like distribution or when there are local interactions between features. It can capture subtle variations and provide a more nuanced assessment of heritability by giving more importance to samples with similar composition.",
-                   tags$br(),
-                   tags$br(),
-                   tags$strong("Montesinos-Lopez et al., 2021:")," " , tags$em("A guide for kernel generalized regression methods for genomic-enabled prediction"),
-                   tags$br(),
-                   tags$strong(tags$a("https://doi.org/10.1038/s41437-021-00412-1", href = "https://www.nature.com/articles/s41437-021-00412-1")),
-                   tags$br(),
-                   tags$strong("He et al., 2022:"), " ", tags$em("Exploring methods to summarize gut microbiota composition for microbiability estimation and phenotypic prediction in swine"),
-                   tags$br(),
-                   tags$strong(tags$a("https://doi.org/10.1093/jas/skac231", href = "https://academic.oup.com/jas/article/100/9/skac231/6623959?login=true")),
-                   id = "gaussianJustification",
-                   style = "font-size:20px;")
-          ),
-          actionButton("toggleGaussianButton", "Toggle Gaussian Justification")
-        )
-      ),
-      fluidRow(
-        column(
-          width = 10,
-          tags$h2("Arc-Cosine Kernel (AK1)",
-                  style = "font-size:26px; text-decoration:underline;"),
-          shinyjs::hidden(
-            p("The arc-cosine kernel is preferred when the data represents relative abundances or compositional data. It effectively captures the compositional nature of the data by handling the inherent constraints of proportions.",
-              tags$br(),
-              tags$br(),
-              tags$strong("Montesinos-Lopez et al., 2021:")," " , tags$em("A guide for kernel generalized regression methods for genomic-enabled prediction"),
-              tags$br(),
-              tags$strong(tags$a("https://doi.org/10.1038/s41437-021-00412-1", href = "https://www.nature.com/articles/s41437-021-00412-1")),
-              tags$br(),
-              tags$strong("He et al., 2022:"), " ", tags$em("Exploring methods to summarize gut microbiota composition for microbiability estimation and phenotypic prediction in swine"),
-              tags$br(),
-              tags$strong(tags$a("https://doi.org/10.1093/jas/skac231", href = "https://academic.oup.com/jas/article/100/9/skac231/6623959?login=true")),
-              id = "arcCosineJustification",
-              style = "font-size:20px;")
-          ),
-          actionButton("toggleArcCosineButton", "Toggle Arc-Cosine Justification")
-        )
-      ),
-      fluidRow(
-        column(
-          width = 10,
-          tags$h2("Poisson Log Normal method (PLN)",
-                  style = "font-size:26px; text-decoration:underline;"),
-          shinyjs::hidden(
-            tags$p("The Poisson Log Normal (PLN) method can be used to analyze data, whether it is relative or not, due to its ability to address two key characteristics of such data: count-based nature and overdispersion.",
-                   tags$br(),
-                   tags$br(),
-                   tags$strong("Chiquet et al., 2021:"), " ", tags$em("The Poisson-Lognormal Model as a Versatile Framework for the Joint Analysis of Species Abundances"),
-                   tags$br(),
-                   tags$strong(tags$a("https://doi.org/10.3389/fevo.2021.588292", href = "https://www.frontiersin.org/articles/10.3389/fevo.2021.588292/full")),
-                   id = "PLNJustification",
-                   style = "font-size:20px;")
-          ),
-          actionButton("togglePLNButton", "Toggle PLN Justification")
-        )
-      ),
-      fluidRow(
-        column(
-          width = 10,
-          tags$h2("Jaccard",
-                  style = "font-size:26px; text-decoration:underline;"),
-          shinyjs::hidden(
-            p("The Jaccard distance is commonly used to analyze data, whether it's relative or absolute, due to its simplicity and robustness. It compares the presence or absence of features between samples, disregarding abundance levels, making it suitable for diverse datasets. Not recommended to treat compositional data.",
-              tags$br(),
-              tags$br(),
-              tags$strong("Dixon et al., 2003:"), " ", tags$em("VEGAN, a package of R functions for community ecology"),
-              tags$br(),
-              tags$strong(tags$a("https://doi.org/10.1016/S0377-8401(03)00204-9", href = "https://www.sciencedirect.com/science/article/pii/S0377840103002049?via%3Dihub")),
-              tags$br(),
-              tags$strong("Gloor et al., 2017:"), " ", tags$em("Microbiome Datasets Are Compositional: And This Is Not Optional"),
-              tags$br(),
-              tags$strong(tags$a("https://doi.org/10.3389/fmicb.2017.02224", href = "https://www.frontiersin.org/articles/10.3389/fmicb.2017.02224/full")),
-              id = "jaccardJustification",
-              style = "font-size:20px;")
-          ),
-          actionButton("toggleJaccardButton", "Toggle Jaccard Justification")
-        )
-      ),
-      fluidRow(
-        column(
-          width = 10,
-          tags$h2("Bray-Curtis",
-                  style = "font-size:26px; text-decoration:underline;"),
-          shinyjs::hidden(
-            p("The Bray-Curtis distance is a valuable metric to treat and analyze data due to its ability to capture both the presence/absence and relative abundance of features. Not recommended to treat compositional data.",
-              tags$br(),
-              tags$br(),
-              tags$strong("Dixon et al., 2003:"), " ", tags$em("VEGAN, a package of R functions for community ecology"),
-              tags$br(),
-              tags$strong(tags$a("https://doi.org/10.1016/S0377-8401(03)00204-9", href = "https://www.sciencedirect.com/science/article/pii/S0377840103002049?via%3Dihub")),
-              tags$br(),
-              tags$strong("Gloor et al., 2017:"), " ", tags$em("Microbiome Datasets Are Compositional: And This Is Not Optional"),
-              tags$br(),
-              tags$strong(tags$a("https://doi.org/10.3389/fmicb.2017.02224", href = "https://www.frontiersin.org/articles/10.3389/fmicb.2017.02224/full")),
-              id = "bcJustification",
-              style = "font-size:20px;")
-          ),
-          actionButton("toggleBCButton", "Toggle Bray-Curtis Justification")
-        )
-      ),
-      fluidRow(
-        column(
-          width = 10,
-          tags$h2("Euclidean/Aitchison",
-                  style = "font-size:26px; text-decoration:underline;"),
-          shinyjs::hidden(
-            p("The Euclidean distance is the most basic distance. When used on CLR transformed data, it is called Aitchison distance. The Aitchison distance is known to handle compositional data, meaning data in which the abundance of one species is dependent on others, and the Aitchison distance accounts for this constraint. It also enables meaningful comparisons and dissimilarity analysis between microbial samples, allowing for the exploration of genetic factors and heritability in microbial abundance variations.",
-              tags$br(),
-              tags$br(),
-              tags$strong("Gloor et al., 2017:"), " ", tags$em("Microbiome Datasets Are Compositional: And This Is Not Optional"),
-              tags$br(),
-              tags$strong(tags$a("https://doi.org/10.3389/fmicb.2017.02224", href = "https://www.frontiersin.org/articles/10.3389/fmicb.2017.02224/full")),
-              tags$br(),
-              tags$strong("Greenacre et al., 2022:")," ", tags$em("Aitchison's Compositional Data Analysis 40 Years On: A Reappraisal"),
-              tags$br(),
-              tags$strong(tags$a("https://doi.org/10.48550/arXiv.2201.05197", href = "https://arxiv.org/abs/2201.05197")),
-              id = "aitJustification",
-              style = "font-size:20px;")
-          ),
-          actionButton("toggleAitButton", "Toggle Aitchison Justification")
-        )
-      ),
-      fluidRow(
-        column(
-          width = 10,
-          tags$h2("MultiDimensionalScaling (MDS)",
-                  style = "font-size:26px; text-decoration:underline;"),
-          shinyjs::hidden(
-            p("MDS (Multidimensional Scaling) is used to treat and analyze data because it allows for the visualization of similarities or dissimilarities between samples based on their microbial composition, providing a comprehensive overview of the dataset. MDS reduces the dimensionality of the data while preserving pairwise distances, it exacerbates discrimination between samples and/or group of samples.",
-              tags$br(),
-              tags$br(),
-              tags$strong("He et al., 2022:"), " ", tags$em("Exploring methods to summarize gut microbiota composition for microbiability estimation and phenotypic prediction in swine"),
-              tags$br(),
-              tags$strong(tags$a("https://doi.org/10.1093/jas/skac231", href = "https://academic.oup.com/jas/article/100/9/skac231/6623959?login=true")),
-              id = "mdsJustification",
-              style = "font-size:20px;")
-          ),
-          actionButton("toggleMDSButton", "Toggle MDS Justification")
-        )
-      ),
-      fluidRow(
-        column(
-          width = 10,
-          tags$h2("Detrended Correpondence Analysis (DCA)",
-                  style = "font-size:26px; text-decoration:underline;"),
-          shinyjs::hidden(
-            p("DCA (Detrended Correspondence Analysis) is used to analyze data due to its ability to capture complex nonlinear relationships or gradients in the dataset. By decomposing the variance in the data, DCA reveals the main trends or gradients present in the microbial communities, allowing for the interpretation of underlying patterns. It also exacerbates discrimination between samples and/or group of samples.",
-              tags$br(),
-              tags$br(),
-              tags$strong("He et al., 2022:"), " ", tags$em("Exploring methods to summarize gut microbiota composition for microbiability estimation and phenotypic prediction in swine"),
-              tags$br(),
-              tags$strong(tags$a("https://doi.org/10.1093/jas/skac231", href = "https://academic.oup.com/jas/article/100/9/skac231/6623959?login=true")),
-              id = "dcaJustification",
-              style = "font-size:20px;")
-          ),
-          actionButton("toggleDCAButton", "Toggle DCA Justification")
-        )
-      )
-    )
-  ),
-  
-  # Page 2: Recapitulative Table
-  tabPanel(
-    "Recapitulative Table",
-    mainPanel(
-      div(
-        style = "text-align: center;",
-        h1(tags$span("Recapitulative Table",
-                     style = "font-family: Times New Roman; font-size: 42px; color: #FF0000; font-weight: 700;"))
-      ),
-      div(
-        style = "text-align: center;",
-        img(src = "Recap1.PNG", width = "100%")
-      ),
-      div(
-        style = "text-align: center;",
-        img(src = "Recap2.PNG", width = "100%")
-      ),
-      div(
-        style = "text-align: center;",
-        h2(tags$span("Legend",
-                     style = "font-family: Times New Roman; font-size: 42px; color: #FF0000; font-weight: 700;"))
-      ),
-      div(
-        style = "text-align: center;",
-        img(src = "Capture.PNG", width = "30%")
-      )
-    )
-  ),
-  
-  # Page 3: Upload Data and Generate Similarity Matrix
+  # Page 1: Upload Data and Generate Similarity Matrix
   
   tabPanel(
     "Generate Matrix",
@@ -366,7 +116,7 @@ ui <- navbarPage(
     )
   ),
   
-  # Page 4: Comparison of Similarity Matrices
+  # Page 2: Comparison of Similarity Matrices
   tabPanel(
     "Comparison",
     tags$style("
@@ -452,8 +202,264 @@ ui <- navbarPage(
         )
       )
     )
+  ),
+
+# Page 3: Method Justifications
+tabPanel(
+  "Method Justifications",
+  fluidPage(
+    useShinyjs(),  # Add useShinyjs()
+    div(
+      style="text-align:center;",
+      h1(tags$span("Method justifications",
+                   style = "font-family: Times New Roman ; font-size: 42px; color: #FF0000;font-weight: 700;"))
+    ),
+    fluidRow(
+      column(
+        width = 10,
+        tags$h2("Linear Kernel (LK)",
+                style = "font-size:26px; text-decoration:underline;"),
+        shinyjs::hidden(
+          tags$p("Also known as the cross product or Ross matrix, the linear kernel is a suitable choice when the data exhibits a linear pattern. It works well when the data change proportionally.",
+                 tags$br(),
+                 tags$br(),
+                 tags$strong("Ross et al., 2013:"), " ", tags$em("Metagenomic Predictions: From Microbiome to Complex Health and Environmental Phenotypes in Humans and Cattle"),
+                 tags$br(),
+                 tags$strong(tags$a("https://doi.org/10.1371/journal.pone.0073056", href = "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0073056")),
+                 tags$br(),
+                 tags$strong("Montesinos-Lopez et al., 2021:"), " ", tags$em( "A guide for kernel generalized regression methods for genomic-enabled prediction"),
+                 tags$br(),
+                 tags$strong(tags$a("https://doi.org/10.1038/s41437-021-00412-1", href = "https://www.nature.com/articles/s41437-021-00412-1")),
+                 id = "linearJustification",
+                 style = "font-size:20px;")
+        ),
+        actionButton("toggleLinearButton", "Toggle Linear Justification")
+      )
+    ),
+    fluidRow(
+      column(
+        width = 10,
+        tags$h2("Polynomial Kernel (PK)",
+                style = "font-size:26px; text-decoration:underline;"),
+        shinyjs::hidden(
+          tags$p("The polynomial kernel is preferable when the data shows nonlinear relationships. It allows us to capture intricate interactions and higher-order relationships among features.",
+                 tags$br(),
+                 tags$br(),
+                 tags$strong("Montesinos-Lopez et al., 2021:")," " , tags$em("A guide for kernel generalized regression methods for genomic-enabled prediction"),
+                 tags$br(),
+                 tags$strong(tags$a("https://doi.org/10.1038/s41437-021-00412-1", href = "https://www.nature.com/articles/s41437-021-00412-1")),
+                 tags$br(),
+                 tags$strong("He et al., 2022:"), " ", tags$em("Exploring methods to summarize gut microbiota composition for microbiability estimation and phenotypic prediction in swine"),
+                 tags$br(),
+                 tags$strong(tags$a("https://doi.org/10.1093/jas/skac231", href = "https://academic.oup.com/jas/article/100/9/skac231/6623959?login=true")),
+                 id = "polynomialJustification",
+                 style = "font-size:20px;")
+        ),
+        actionButton("togglePolynomialButton", "Toggle Polynomial Justification")
+      )
+    ),
+    fluidRow(
+      column(
+        width = 10,
+        tags$h2("Gaussian Kernel (GK)",
+                style = "font-size:26px; text-decoration:underline;"),
+        shinyjs::hidden(
+          tags$p("The Gaussian kernel is a suitable choice when the data exhibits a Gaussian-like distribution or when there are local interactions between features. It can capture subtle variations and provide a more nuanced assessment of heritability by giving more importance to samples with similar composition.",
+                 tags$br(),
+                 tags$br(),
+                 tags$strong("Montesinos-Lopez et al., 2021:")," " , tags$em("A guide for kernel generalized regression methods for genomic-enabled prediction"),
+                 tags$br(),
+                 tags$strong(tags$a("https://doi.org/10.1038/s41437-021-00412-1", href = "https://www.nature.com/articles/s41437-021-00412-1")),
+                 tags$br(),
+                 tags$strong("He et al., 2022:"), " ", tags$em("Exploring methods to summarize gut microbiota composition for microbiability estimation and phenotypic prediction in swine"),
+                 tags$br(),
+                 tags$strong(tags$a("https://doi.org/10.1093/jas/skac231", href = "https://academic.oup.com/jas/article/100/9/skac231/6623959?login=true")),
+                 id = "gaussianJustification",
+                 style = "font-size:20px;")
+        ),
+        actionButton("toggleGaussianButton", "Toggle Gaussian Justification")
+      )
+    ),
+    fluidRow(
+      column(
+        width = 10,
+        tags$h2("Arc-Cosine Kernel (AK1)",
+                style = "font-size:26px; text-decoration:underline;"),
+        shinyjs::hidden(
+          p("The arc-cosine kernel is preferred when the data represents relative abundances or compositional data. It effectively captures the compositional nature of the data by handling the inherent constraints of proportions.",
+            tags$br(),
+            tags$br(),
+            tags$strong("Montesinos-Lopez et al., 2021:")," " , tags$em("A guide for kernel generalized regression methods for genomic-enabled prediction"),
+            tags$br(),
+            tags$strong(tags$a("https://doi.org/10.1038/s41437-021-00412-1", href = "https://www.nature.com/articles/s41437-021-00412-1")),
+            tags$br(),
+            tags$strong("He et al., 2022:"), " ", tags$em("Exploring methods to summarize gut microbiota composition for microbiability estimation and phenotypic prediction in swine"),
+            tags$br(),
+            tags$strong(tags$a("https://doi.org/10.1093/jas/skac231", href = "https://academic.oup.com/jas/article/100/9/skac231/6623959?login=true")),
+            id = "arcCosineJustification",
+            style = "font-size:20px;")
+        ),
+        actionButton("toggleArcCosineButton", "Toggle Arc-Cosine Justification")
+      )
+    ),
+    fluidRow(
+      column(
+        width = 10,
+        tags$h2("Poisson Log Normal method (PLN)",
+                style = "font-size:26px; text-decoration:underline;"),
+        shinyjs::hidden(
+          tags$p("The Poisson Log Normal (PLN) method can be used to analyze data, whether it is relative or not, due to its ability to address two key characteristics of such data: count-based nature and overdispersion.",
+                 tags$br(),
+                 tags$br(),
+                 tags$strong("Chiquet et al., 2021:"), " ", tags$em("The Poisson-Lognormal Model as a Versatile Framework for the Joint Analysis of Species Abundances"),
+                 tags$br(),
+                 tags$strong(tags$a("https://doi.org/10.3389/fevo.2021.588292", href = "https://www.frontiersin.org/articles/10.3389/fevo.2021.588292/full")),
+                 id = "PLNJustification",
+                 style = "font-size:20px;")
+        ),
+        actionButton("togglePLNButton", "Toggle PLN Justification")
+      )
+    ),
+    fluidRow(
+      column(
+        width = 10,
+        tags$h2("Jaccard",
+                style = "font-size:26px; text-decoration:underline;"),
+        shinyjs::hidden(
+          p("The Jaccard distance is commonly used to analyze data, whether it's relative or absolute, due to its simplicity and robustness. It compares the presence or absence of features between samples, disregarding abundance levels, making it suitable for diverse datasets. Not recommended to treat compositional data.",
+            tags$br(),
+            tags$br(),
+            tags$strong("Dixon et al., 2003:"), " ", tags$em("VEGAN, a package of R functions for community ecology"),
+            tags$br(),
+            tags$strong(tags$a("https://doi.org/10.1016/S0377-8401(03)00204-9", href = "https://www.sciencedirect.com/science/article/pii/S0377840103002049?via%3Dihub")),
+            tags$br(),
+            tags$strong("Gloor et al., 2017:"), " ", tags$em("Microbiome Datasets Are Compositional: And This Is Not Optional"),
+            tags$br(),
+            tags$strong(tags$a("https://doi.org/10.3389/fmicb.2017.02224", href = "https://www.frontiersin.org/articles/10.3389/fmicb.2017.02224/full")),
+            id = "jaccardJustification",
+            style = "font-size:20px;")
+        ),
+        actionButton("toggleJaccardButton", "Toggle Jaccard Justification")
+      )
+    ),
+    fluidRow(
+      column(
+        width = 10,
+        tags$h2("Bray-Curtis",
+                style = "font-size:26px; text-decoration:underline;"),
+        shinyjs::hidden(
+          p("The Bray-Curtis distance is a valuable metric to treat and analyze data due to its ability to capture both the presence/absence and relative abundance of features. Not recommended to treat compositional data.",
+            tags$br(),
+            tags$br(),
+            tags$strong("Dixon et al., 2003:"), " ", tags$em("VEGAN, a package of R functions for community ecology"),
+            tags$br(),
+            tags$strong(tags$a("https://doi.org/10.1016/S0377-8401(03)00204-9", href = "https://www.sciencedirect.com/science/article/pii/S0377840103002049?via%3Dihub")),
+            tags$br(),
+            tags$strong("Gloor et al., 2017:"), " ", tags$em("Microbiome Datasets Are Compositional: And This Is Not Optional"),
+            tags$br(),
+            tags$strong(tags$a("https://doi.org/10.3389/fmicb.2017.02224", href = "https://www.frontiersin.org/articles/10.3389/fmicb.2017.02224/full")),
+            id = "bcJustification",
+            style = "font-size:20px;")
+        ),
+        actionButton("toggleBCButton", "Toggle Bray-Curtis Justification")
+      )
+    ),
+    fluidRow(
+      column(
+        width = 10,
+        tags$h2("Euclidean/Aitchison",
+                style = "font-size:26px; text-decoration:underline;"),
+        shinyjs::hidden(
+          p("The Euclidean distance is the most basic distance. When used on CLR transformed data, it is called Aitchison distance. The Aitchison distance is known to handle compositional data, meaning data in which the abundance of one species is dependent on others, and the Aitchison distance accounts for this constraint. It also enables meaningful comparisons and dissimilarity analysis between microbial samples, allowing for the exploration of genetic factors and heritability in microbial abundance variations.",
+            tags$br(),
+            tags$br(),
+            tags$strong("Gloor et al., 2017:"), " ", tags$em("Microbiome Datasets Are Compositional: And This Is Not Optional"),
+            tags$br(),
+            tags$strong(tags$a("https://doi.org/10.3389/fmicb.2017.02224", href = "https://www.frontiersin.org/articles/10.3389/fmicb.2017.02224/full")),
+            tags$br(),
+            tags$strong("Greenacre et al., 2022:")," ", tags$em("Aitchison's Compositional Data Analysis 40 Years On: A Reappraisal"),
+            tags$br(),
+            tags$strong(tags$a("https://doi.org/10.48550/arXiv.2201.05197", href = "https://arxiv.org/abs/2201.05197")),
+            id = "aitJustification",
+            style = "font-size:20px;")
+        ),
+        actionButton("toggleAitButton", "Toggle Aitchison Justification")
+      )
+    ),
+    fluidRow(
+      column(
+        width = 10,
+        tags$h2("MultiDimensionalScaling (MDS)",
+                style = "font-size:26px; text-decoration:underline;"),
+        shinyjs::hidden(
+          p("MDS (Multidimensional Scaling) is used to treat and analyze data because it allows for the visualization of similarities or dissimilarities between samples based on their microbial composition, providing a comprehensive overview of the dataset. MDS reduces the dimensionality of the data while preserving pairwise distances, it exacerbates discrimination between samples and/or group of samples.",
+            tags$br(),
+            tags$br(),
+            tags$strong("He et al., 2022:"), " ", tags$em("Exploring methods to summarize gut microbiota composition for microbiability estimation and phenotypic prediction in swine"),
+            tags$br(),
+            tags$strong(tags$a("https://doi.org/10.1093/jas/skac231", href = "https://academic.oup.com/jas/article/100/9/skac231/6623959?login=true")),
+            id = "mdsJustification",
+            style = "font-size:20px;")
+        ),
+        actionButton("toggleMDSButton", "Toggle MDS Justification")
+      )
+    ),
+    fluidRow(
+      column(
+        width = 10,
+        tags$h2("Detrended Correpondence Analysis (DCA)",
+                style = "font-size:26px; text-decoration:underline;"),
+        shinyjs::hidden(
+          p("DCA (Detrended Correspondence Analysis) is used to analyze data due to its ability to capture complex nonlinear relationships or gradients in the dataset. By decomposing the variance in the data, DCA reveals the main trends or gradients present in the microbial communities, allowing for the interpretation of underlying patterns. It also exacerbates discrimination between samples and/or group of samples.",
+            tags$br(),
+            tags$br(),
+            tags$strong("He et al., 2022:"), " ", tags$em("Exploring methods to summarize gut microbiota composition for microbiability estimation and phenotypic prediction in swine"),
+            tags$br(),
+            tags$strong(tags$a("https://doi.org/10.1093/jas/skac231", href = "https://academic.oup.com/jas/article/100/9/skac231/6623959?login=true")),
+            id = "dcaJustification",
+            style = "font-size:20px;")
+        ),
+        actionButton("toggleDCAButton", "Toggle DCA Justification")
+      )
+    )
+  )
+),
+
+# Page 4: Recapitulative Table
+tabPanel(
+  "Recapitulative Table",
+  mainPanel(
+    div(
+      style = "text-align: center;",
+      h1(tags$span("Recapitulative Table",
+                   style = "font-family: Times New Roman; font-size: 42px; color: #FF0000; font-weight: 700;"))
+    ),
+    div(
+      style = "text-align: center;",
+      img(src = "Recap1.PNG", width = "100%")
+    ),
+    div(
+      style = "text-align: center;",
+      img(src = "Recap2.PNG", width = "100%")
+    ),
+    div(
+      style = "text-align: center;",
+      h2(tags$span("Legend",
+                   style = "font-family: Times New Roman; font-size: 42px; color: #FF0000; font-weight: 700;"))
+    ),
+    div(
+      style = "text-align: center;",
+      img(src = "Capture.PNG", width = "30%")
+    )
   )
 )
+)
+
+
+
+
+
+
 
 # Define the server
 server <- function(input, output, session) {
@@ -662,7 +668,7 @@ server <- function(input, output, session) {
   # Generate text output
   output$text <- renderText({
     if (!is.null(similarityMatrix())) {
-      "First 5 rows and column of the similarity matrix generated."
+      "First 5 rows and columns of the similarity matrix generated."
     }
   })
   
