@@ -838,7 +838,7 @@ server <- function(input, output, session) {
       
       if (length(plots) > 0) {
         # Print the grid of plots
-        gridExtra::grid.arrange(grobs = plots, ncol = 3)
+        gridExtra::grid.arrange(grobs = plots, ncol = 2)
       } else {
         # Handle case when there are no valid plots
         print("No valid plots to display.")
@@ -846,7 +846,7 @@ server <- function(input, output, session) {
     }
   })
 
-  # Comparison of similarity matrices
+  # visualization similarity matrices using corrplot
   output$comparisonCorrPlot <- renderPlot({
     req(input$compareButtonCorrPlot)
     
@@ -885,8 +885,8 @@ server <- function(input, output, session) {
           stop("Invalid method selected.")
         )
         
-        correlationMatrix <- cor(similarityMatrix)
-        norma_data <- (1+correlationMatrix)/2
+        #correlationMatrix <- cor(similarityMatrix)
+        norma_data <- similarityMatrix #(1+correlationMatrix)/2
         melted_data <- melt(norma_data)
         ggplot(data = melted_data, aes(x = as.numeric(Var1), y = as.numeric(Var2), fill = value)) +
           geom_tile() +
@@ -903,7 +903,7 @@ server <- function(input, output, session) {
                 axis.title = element_text(size = 12))
       })
       
-      grid <- do.call(grid.arrange, c(plots, ncol = 3))  # Adjust the number of columns as desired
+      grid <- do.call(grid.arrange, c(plots, ncol = 2))  # Adjust the number of columns as desired
       
       # Display the grid
       grid
@@ -917,9 +917,9 @@ server <- function(input, output, session) {
       plots <- lapply(selectedMatrices, function(matrixName) {
         h <- unlist(values$matrixList[[matrixName]])
         p <- matrix(h,nrow = sqrt(length(h)),ncol = sqrt(length(h)))
-        correlationMatrix <- cor(p)
+        correlationMatrix <- p
         
-        norma_data <- (1+correlationMatrix)/2
+        norma_data <- correlationMatrix #(1+correlationMatrix)/2
         melted_data <- melt(norma_data)
         
         ggplot(data = melted_data, aes(x = as.numeric(Var1), y = as.numeric(Var2), fill = value)) +
@@ -937,7 +937,7 @@ server <- function(input, output, session) {
                 axis.title = element_text(size = 12))
       })
       
-      grid <- do.call(grid.arrange, c(plots, ncol = 3))  # Adjust the number of columns as desired
+      grid <- do.call(grid.arrange, c(plots, ncol = 2))  # Adjust the number of columns as desired
       
       # Display the grid
       grid
