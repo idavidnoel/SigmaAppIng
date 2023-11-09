@@ -885,14 +885,14 @@ server <- function(input, output, session) {
           stop("Invalid method selected.")
         )
         
-        #correlationMatrix <- cor(similarityMatrix)
-        norma_data <- similarityMatrix #(1+correlationMatrix)/2
+        correlationMatrix <- similarityMatrix
+        norma_data <- correlationMatrix #(1+correlationMatrix)/2
         melted_data <- melt(norma_data)
         ggplot(data = melted_data, aes(x = as.numeric(Var1), y = as.numeric(Var2), fill = value)) +
           geom_tile() +
           labs(x = "", y = "") +
           theme_bw() +
-          scale_fill_gradientn(colours = c("blue", "white", "red"))+
+          scale_fill_gradientn(colours = c("blue", "white", "red"), limit = c(0,1))+
           ggtitle(method)+  # Add the method name as the plot title 
           theme(plot.margin = margin(20, 20, 20, 20, "pt"),
                 plot.background = element_rect(fill = "white"),
@@ -926,7 +926,7 @@ server <- function(input, output, session) {
           geom_tile() +
           labs(x = "", y = "") +
           theme_bw() +
-          scale_fill_gradientn(colours = c("blue", "white", "red"))+
+          scale_fill_gradientn(colours = c("blue", "white", "red"), limit = c(0,1))+
           ggtitle(matrixName)+  # Add the method name as the plot title 
           theme(plot.margin = margin(20, 20, 20, 20, "pt"),
                 plot.background = element_rect(fill = "white"),
