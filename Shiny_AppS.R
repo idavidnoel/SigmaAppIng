@@ -89,7 +89,7 @@ ui <- navbarPage(
         div(
           style = "border: 1px solid #ddd; padding: 10px; margin-top: 10px;",
           tags$h4("Preprocessing Steps"),
-          selectInput("type", label = tags$span("Initial data type", style = "font-size: 17px;"), choices = c("Raw", "Relative"), selected = "Relative"),
+          selectInput("type", label = tags$span("Initial data type", style = "font-size: 17px;"), choices = c("Raw", "Relative"), selected = "Raw"),
           selectInput("imputation", label = tags$span("Data Imputation", style = "font-size: 17px;"), choices = c("None", "Constant", "GBM"), selected = "None"),
           conditionalPanel(
             condition = "input.imputation != 'None' && input.imputation != 'GBM'",
@@ -197,7 +197,8 @@ ui <- navbarPage(
         fluidRow(
           column(
             width = 6,
-            DT::dataTableOutput("correlationTable")
+            htmlOutput("texttablecomp"),
+            tableOutput("correlationTable")
           )
         )
       )
@@ -563,17 +564,16 @@ server <- function(input, output, session) {
     if (!is.null(similarityMatrix())) {
       subsetMatrixDF <- head(subsetMatrix(),5)
       subsetMatrixDF <- as.data.frame(subsetMatrixDF)  # Convert to data frame
-      subsetMatrixDF$RowNames <- rownames(subsetMatrixDF)  # Add row names as a column
-      rownames(subsetMatrixDF) <- NULL  # Remove row names from the data frame
-      subsetMatrixDF <- subsetMatrixDF[, c("RowNames", colnames(subsetMatrixDF))]  # Reorder columns to have row names as the first column
-      subsetMatrixDF<-subsetMatrixDF[,-length(subsetMatrixDF)]
+      rn<-colnames(subsetMatrixDF)
+      subsetMatrixDF <-cbind(rn,subsetMatrixDF)
+      colnames(subsetMatrixDF)<-c("",rn)
       subsetMatrixDF
     }
   })
   
   
-  # Generate correlation table
-  output$correlationTable <- DT::renderDataTable({
+  # Generate table with correlation between out diagonal elements
+  output$correlationTable <- renderTable({
     req(input$compareButtonTable)
     
     methods <- input$selectedMethods
@@ -618,9 +618,16 @@ server <- function(input, output, session) {
       correlationTable <- matrix(nrow = numMethods, ncol = numMethods)
       
       for (i in 1:numMethods) {
-        for (j in 1:numMethods) {
-          correlationValue <- cor(c(similarityMatrices[[i]]), c(similarityMatrices[[j]]))
-          correlationTable[i, j] <- round(correlationValue, digits = 3)
+        for (j in i:numMethods) {
+       #   correlationValue <- cor(c(similarityMatrices[[i]]), c(similarityMatrices[[j]]))
+          Xtri<-similarityMatrices[[i]][upper.tri(similarityMatrices[[i]],diag=F)]
+          Ytri<-similarityMatrices[[j]][upper.tri(similarityMatrices[[j]],diag=F)]
+          correlationValue <- cor(Xtri,Ytri)
+          ratioValue<-(max(Ytri)-min(Ytri))/(max(Xtri)-min(Xtri))
+          if (i!=j){
+          correlationTable[i,j] <- round(correlationValue, digits = 3)
+          correlationTable[j,i]<-round(ratioValue,digit=3)} else
+            {correlationTable[i,i]<-round(mean(Xtri),digit=3)}
         }
       }
 
@@ -636,12 +643,21 @@ server <- function(input, output, session) {
       correlationTable <- matrix(nrow = SnumMethods, ncol = SnumMethods)
       
       for (i in 1:SnumMethods) {
-        for (j in 1:SnumMethods) {
-          correlationValue <- cor(
-            as.numeric(unlist(values$matrixList[[selectedMatrices[i]]])),
-            as.numeric(unlist(values$matrixList[[selectedMatrices[j]]]))
-          )
-          correlationTable[i, j] <- round(correlationValue, digits = 3)
+        for (j in i:SnumMethods) {
+          X<-as.numeric(unlist(values$matrixList[[selectedMatrices[i]]]))
+          mX<-matrix(ncol=sqrt(length(X)),nrow=sqrt(length(X)),X)
+          Xtri<-mX[upper.tri(mX,diag=F)]
+          Y<-as.numeric(unlist(values$matrixList[[selectedMatrices[j]]]))
+          mY<-matrix(ncol=sqrt(length(Y)),nrow=sqrt(length(Y)),Y)
+          Ytri<-mY[upper.tri(mY,diag=F)]
+          correlationValue <- cor(Xtri,Ytri)
+            #as.numeric(unlist(values$matrixList[[selectedMatrices[i]]])),
+            #as.numeric(unlist(values$matrixList[[selectedMatrices[j]]]))
+         ratioValue<-(max(Ytri)-min(Ytri))/(max(Xtri)-min(Xtri))
+         if (i!=j){
+           correlationTable[i,j] <- round(correlationValue, digits = 3)
+           correlationTable[j,i]<-round(ratioValue,digit=3)} else
+           {correlationTable[i,i]<-round(mean(Xtri),digit=3)}
         }
       }
       
@@ -662,7 +678,7 @@ server <- function(input, output, session) {
     correlationTableDF <- correlationTableDF[, !grepl("RowNames.1", colnames(correlationTableDF))]
     
     correlationTableDF
-
+   
   })
   
   # Generate text output
@@ -671,6 +687,19 @@ server <- function(input, output, session) {
       "First 5 rows and columns of the similarity matrix generated."
     }
   })
+  
+  output$texttablecomp <- renderUI({
+    methods <- input$selectedMethods
+    numMethods <- length(methods)
+    
+    if (numMethods >= 2) {
+      str1<- "Correlation between off-diagonal elements above the diagonal"
+      str2<-"Average value of off-diagonal elements on the diagonal"
+      str3<-"Ratio between range of off-diagonal elements (row/column) below the diagonal"
+      HTML(paste(str1, str2,str3, sep = '<br/>'))
+    }
+  })
+  
   
   # Export similarity matrix as CSV file
   output$exportButton <- downloadHandler(
