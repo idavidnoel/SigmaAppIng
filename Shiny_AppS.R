@@ -170,39 +170,44 @@ ui <- navbarPage(
             choices = NULL,
             multiple = TRUE,
             options = list(maxOptions = 10, plugins = list("remove_button"))
-          ),
-        actionButton("compareButtonCorrPlot", "Compare Similarity Matrices as CorrPlot"),
-        actionButton("compareButtonPlot", "Compare Similarity Matrices as Plot"),
-        actionButton("compareButtonTable", "Compare Similarity Matrices as Table")
+          )
+        #,
+        #actionButton("compareButtonCorrPlot", "Compare Similarity Matrices as CorrPlot"),
+        #actionButton("compareButtonPlot", "Compare Similarity Matrices as Plot"),
+        #actionButton("compareButtonTable", "Compare Similarity Matrices as Table")
       ),
       mainPanel(
-        fluidRow(
-          class = "myRow1",
+        tabsetPanel(
+        #fluidRow(
+         tabPanel("matrices",
+           class = "myRow1",
           column(
             width = 6,
             plotOutput("comparisonCorrPlot", width = "200%", height = "1200px")
-          ),
-          tags$head(tags$style("
-      .myRow1{height:1200px;}"))
+          )#,
+          #tags$head(tags$style("
+      #.myRow1{height:1200px;}"))
         ),
-        fluidRow(
-          column(
+        #fluidRow(
+        tabPanel("plot",  
+        column(
             class = "myRow2",
             width = 6,
-            plotOutput("comparisonPlot", width = "200%", height = "1000px")
-          ),
-          tags$head(tags$style("
-      .myRow2{height:1000px;}"))
+            plotOutput("comparisonPlot", width = "200%", height = "3000px")
+          )
+        #,
+       #   tags$head(tags$style("
+      #.myRow2{height:3000px;}"))
         ),
-        fluidRow(
-          column(
-            width = 6,
+        tabPanel("table",
+          #column(
+            #width = 6,
             tableOutput("correlationTable"),
             htmlOutput("texttablecomp")
-          )
+          #)
         )
       )
-    )
+    ))
   ),
 
 # Page 3: Method Justifications
@@ -559,7 +564,7 @@ server <- function(input, output, session) {
     subset(similarityMatrix(), select = c(1:5))
   })
   
-  # Generate similarity table
+  # Generate subset similarity table for vizualisation
   output$similarityTable <- renderTable({
     if (!is.null(similarityMatrix())) {
       subsetMatrixDF <- head(subsetMatrix(),5)
@@ -574,7 +579,7 @@ server <- function(input, output, session) {
   
   # Generate table comparing off-diagonal elements
   output$correlationTable <- renderTable({
-    req(input$compareButtonTable)
+    #req(input$compareButtonTable)
     
     methods <- input$selectedMethods
     numMethods <- length(methods)
@@ -665,21 +670,13 @@ server <- function(input, output, session) {
       rownames(correlationTable) <- selectedMatrices
       
     }
+   correlationTable
+   #%>%
+    # value = case_when(
+     #  row_number() == col_number() ~ str_glue("<div style = 'color:red'> {value} </div>"),
+      # TRUE ~ value
+     #)
     
-    #colnames(correlationTable)<-c("",selectedMatrices)
-    correlationTable
-    # Create a new correlation table with p-values
-   # correlationTableWithP <- correlationTable
-    
-    
-    #correlationTableDF <- as.data.frame(correlationTableWithP)  # Convert to data frame
-    #correlationTableDF$RowNames <- rownames(correlationTableDF)  # Add row names as a column
-    #rownames(correlationTableDF) <- NULL  # Remove row names from the data frame
-    #correlationTableDF <- correlationTableDF[, c("RowNames", colnames(correlationTableDF))]  # Reorder columns to have row names as the first column
-    
-    #correlationTableDF <- correlationTableDF[, !grepl("RowNames.1", colnames(correlationTableDF))]
-    
-    #correlationTableDF
    
   },rownames=T,spacing='m')
   
@@ -703,9 +700,6 @@ server <- function(input, output, session) {
     }
   })
   
-  
-  
-  
   # Export similarity matrix as CSV file
   output$exportButton <- downloadHandler(
     filename = function() {
@@ -716,11 +710,10 @@ server <- function(input, output, session) {
     }
   )
   
-  
-  
   #plot of off-diagonal elements between methods
+  observe({
   output$comparisonPlot <- renderPlot({
-    req(input$compareButtonPlot)
+    #req(input$compareButtonPlot)
     
     methods <- input$selectedMethods
     selectedMatrices <- input$selectedMatrices
@@ -799,14 +792,17 @@ server <- function(input, output, session) {
       }
       
       # Arrange and display the plots
-      grid.arrange(grobs = plots, ncol = 2)
+      #grid.arrange(grobs = plots, ncol = 2)
       
       # Remove NULL elements
       
       plots <- plots[!sapply(plots, is.null)]
       
       # Print the grid of plots
-      gridExtra::grid.arrange(grobs = plots, ncol = 2)
+      #gridExtra::grid.arrange(grobs = plots, ncol = 2)
+      grid <- do.call(grid.arrange, c(plots, ncol = 2))
+      
+      grid
     }
       
 
@@ -858,17 +854,24 @@ server <- function(input, output, session) {
       
       if (length(plots) > 0) {
         # Print the grid of plots
-        gridExtra::grid.arrange(grobs = plots, ncol = 2)
+        #gridExtra::grid.arrange(grobs = plots, ncol = 2)
+        grid <- do.call(grid.arrange, c(plots, ncol = 2))  # Adjust the number of columns as desired
+        
+        # Display the grid
+        grid
       } else {
         # Handle case when there are no valid plots
         print("No valid plots to display.")
       }
     }
-  })
+  },height=max(round(length(input$selectedMethods)*(length(input$selectedMethods)-1)/4+0.1,0),
+                round(length(input$selectedMatrices)*(length(input$selectedMatrices)-1)/4+0.1,0))*250)
+})
 
   # visualization similarity matrices using corrplot
-  output$comparisonCorrPlot <- renderPlot({
-    req(input$compareButtonCorrPlot)
+ observe({
+   output$comparisonCorrPlot <- renderPlot({
+    #req(input$compareButtonCorrPlot)
     
     methods <- input$selectedMethods
     
@@ -923,7 +926,7 @@ server <- function(input, output, session) {
                 axis.title = element_text(size = 12))
       })
       
-      grid <- do.call(grid.arrange, c(plots, ncol = 2))  # Adjust the number of columns as desired
+      grid <- do.call(grid.arrange, c(plots, ncol = 2))  
       
       # Display the grid
       grid
@@ -962,7 +965,9 @@ server <- function(input, output, session) {
       # Display the grid
       grid
     }
-  })
+  },height=max(round(length(input$selectedMethods)/2+0.1,0),
+                 round(length(input$selectedMatrices)/2+0.1,0))*280)
+})
   
   observeEvent(input$updateListButton, {
     if (!is.null(similarityMatrix())) {
