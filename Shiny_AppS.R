@@ -197,8 +197,8 @@ ui <- navbarPage(
         fluidRow(
           column(
             width = 6,
-            htmlOutput("texttablecomp"),
-            tableOutput("correlationTable")
+            tableOutput("correlationTable"),
+            htmlOutput("texttablecomp")
           )
         )
       )
@@ -572,7 +572,7 @@ server <- function(input, output, session) {
   })
   
   
-  # Generate table with correlation between out diagonal elements
+  # Generate table comparing off-diagonal elements
   output$correlationTable <- renderTable({
     req(input$compareButtonTable)
     
@@ -666,28 +666,31 @@ server <- function(input, output, session) {
       
     }
     
+    #colnames(correlationTable)<-c("",selectedMatrices)
+    correlationTable
     # Create a new correlation table with p-values
-    correlationTableWithP <- correlationTable
+   # correlationTableWithP <- correlationTable
     
     
-    correlationTableDF <- as.data.frame(correlationTableWithP)  # Convert to data frame
-    correlationTableDF$RowNames <- rownames(correlationTableDF)  # Add row names as a column
-    rownames(correlationTableDF) <- NULL  # Remove row names from the data frame
-    correlationTableDF <- correlationTableDF[, c("RowNames", colnames(correlationTableDF))]  # Reorder columns to have row names as the first column
+    #correlationTableDF <- as.data.frame(correlationTableWithP)  # Convert to data frame
+    #correlationTableDF$RowNames <- rownames(correlationTableDF)  # Add row names as a column
+    #rownames(correlationTableDF) <- NULL  # Remove row names from the data frame
+    #correlationTableDF <- correlationTableDF[, c("RowNames", colnames(correlationTableDF))]  # Reorder columns to have row names as the first column
     
-    correlationTableDF <- correlationTableDF[, !grepl("RowNames.1", colnames(correlationTableDF))]
+    #correlationTableDF <- correlationTableDF[, !grepl("RowNames.1", colnames(correlationTableDF))]
     
-    correlationTableDF
+    #correlationTableDF
    
-  })
+  },rownames=T,spacing='m')
   
-  # Generate text output
+  # Generate text output for similarity matrix
   output$text <- renderText({
     if (!is.null(similarityMatrix())) {
       "First 5 rows and columns of the similarity matrix generated."
     }
   })
   
+  #generate text output for table of comparison
   output$texttablecomp <- renderUI({
     methods <- input$selectedMethods
     numMethods <- length(methods)
@@ -701,6 +704,8 @@ server <- function(input, output, session) {
   })
   
   
+  
+  
   # Export similarity matrix as CSV file
   output$exportButton <- downloadHandler(
     filename = function() {
@@ -711,6 +716,9 @@ server <- function(input, output, session) {
     }
   )
   
+  
+  
+  #plot of off-diagonal elements between methods
   output$comparisonPlot <- renderPlot({
     req(input$compareButtonPlot)
     
@@ -766,23 +774,13 @@ server <- function(input, output, session) {
           method2 <- methods[j]
           
           plot_data <- data.frame(
-            X = as.vector(comparisonData[[i]]),
-            Y = as.vector(comparisonData[[j]])
+            X=as.numeric(comparisonData[[i]][upper.tri(comparisonData[[i]],diag=F)]),
+            Y=as.numeric(comparisonData[[j]][upper.tri(comparisonData[[j]],diag=F)])
           )
-          
-          # Convert data to numeric
-          plot_data$X <- as.numeric(plot_data$X)
-          plot_data$Y <- as.numeric(plot_data$Y)
-          
-          # Remove rows with non-numeric values
-          plot_data <- plot_data[complete.cases(plot_data), ]
-          
-          # Exclude diagonal values
-          plot_data <- plot_data[plot_data$X != plot_data$Y, ]
           
           if (nrow(plot_data) > 0) {
             p <- ggplot(plot_data, aes(x = X, y = Y)) +
-              geom_hex() +
+              geom_hex(bins=50) +
               labs(x = method1, y = method2) +
               theme_bw() +
               theme(plot.margin = margin(5, 5, 5, 5, "pt"),
@@ -808,7 +806,7 @@ server <- function(input, output, session) {
       plots <- plots[!sapply(plots, is.null)]
       
       # Print the grid of plots
-      gridExtra::grid.arrange(grobs = plots, ncol = 3)
+      gridExtra::grid.arrange(grobs = plots, ncol = 2)
     }
       
 
@@ -827,24 +825,17 @@ server <- function(input, output, session) {
           method1 <- selectedMatrices[i]
           method2 <- selectedMatrices[j]
           
+          X<-as.numeric(unlist(values$matrixList[[selectedMatrices[i]]]))
+          mX<-matrix(ncol=sqrt(length(X)),nrow=sqrt(length(X)),X)
+          Xtri<-mX[upper.tri(mX,diag=F)]
+          Y<-as.numeric(unlist(values$matrixList[[selectedMatrices[j]]]))
+          mY<-matrix(ncol=sqrt(length(Y)),nrow=sqrt(length(Y)),Y)
+          Ytri<-mY[upper.tri(mY,diag=F)]
           plot_data <- data.frame(
-            X = as.vector(as.numeric(unlist(values$matrixList[[selectedMatrices[i]]]))),
-            Y = as.vector(as.numeric(unlist(values$matrixList[[selectedMatrices[j]]])))
-          )
-          
-          # Convert data to numeric
-          plot_data$X <- as.numeric(plot_data$X)
-          plot_data$Y <- as.numeric(plot_data$Y)
-          
-          # Remove rows with non-numeric values
-          plot_data <- plot_data[complete.cases(plot_data), ]
-          
-          # Exclude diagonal values
-          plot_data <- plot_data[plot_data$X != plot_data$Y, ]
-          
-          if (nrow(plot_data) > 0) {
+            X=Xtri,Y=Ytri)
+         if (nrow(plot_data) > 0) {
             p <- ggplot(plot_data, aes(x = X, y = Y)) +
-              geom_hex() +
+              geom_hex(bins=50) +
               labs(x = method1, y = method2) +
               theme_bw() +
               theme(plot.margin = margin(5, 5, 5, 5, "pt"),
