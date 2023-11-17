@@ -776,6 +776,8 @@ server <- function(input, output, session) {
               geom_hex(bins=50) +
               labs(x = method1, y = method2) +
               theme_bw() +
+              xlim(0,1)+
+              ylim(0,1)+
               theme(plot.margin = margin(5, 5, 5, 5, "pt"),
                     plot.background = element_rect(fill = "white"),
                     panel.background = element_rect(fill = "white"),
@@ -834,6 +836,8 @@ server <- function(input, output, session) {
               geom_hex(bins=50) +
               labs(x = method1, y = method2) +
               theme_bw() +
+              xlim(0,1)+
+              ylim(0,1)+
               theme(plot.margin = margin(5, 5, 5, 5, "pt"),
                     plot.background = element_rect(fill = "white"),
                     panel.background = element_rect(fill = "white"),
