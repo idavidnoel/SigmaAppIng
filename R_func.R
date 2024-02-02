@@ -1,4 +1,4 @@
-K.linear = function(x1,x2=x1){
+K.linear2 = function(x1,x2=x1){
   KL <- as.matrix(x1)%*%(t(x2))*(1/length(x1))
   
   # Assuming KL is a numeric matrix
@@ -22,6 +22,17 @@ K.linear = function(x1,x2=x1){
 }
 
 
+K.linear = function(x1,x2=x1){
+  #centred by column
+  #x1<-scale(x1,scale=F)
+  x1<-scale(x1,scale=F)
+  SV<-sum(as.data.frame(x1)%>%summarize_all(var))
+  KL <- as.matrix(x1)%*%(t(as.matrix(x1)))
+  KL<-KL/SV
+  
+  KL
+}
+
 K.Polynomial=function(x1, x2=x1, gamma=1/length(x1), b=1, d=3){
   PL <- (gamma*(as.matrix(x1)%*%t(x2))+b)^d
   
@@ -44,6 +55,16 @@ K.Polynomial=function(x1, x2=x1, gamma=1/length(x1), b=1, d=3){
   
   PL
 }
+
+
+#K.Polynomial=function(x1, x2=x1, gamma=1/length(x1), b=1, d=3){
+#  x1<-scale(x1)
+#  PL <- (gamma*(as.matrix(x1)%*%t(x1))+b)^d
+#  PL<-PL/length(diag(PL))
+#  PL
+#}
+
+
 
 
 l2norm=function(x){sqrt(sum(x^2))}
