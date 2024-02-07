@@ -157,12 +157,12 @@ K.AK1_Final<-function(x1,x2=x1){
   colnames(AK1)<-rownames(x2)
   rownames(AK1)<-rownames(x1)
   SV=mean(diag(AK1))
-  AK1=AK1/SV
+  AK1=AK1/SV #mean diagonal element=1
   return(AK1)
 }
 
 
-MDS_fnc <- function(x1){
+MDS_fnc2 <- function(x1){
   matrix_E <- vegdist(x1, method="bray")
   MDS_mat<-pcoa(matrix_E)
   vec_mds<-as.data.frame(MDS_mat$vectors)
@@ -201,27 +201,6 @@ MDS_fnc <- function(x1){
   dat_Mds <- K.linear((vec_mds))
   colnames(dat_Mds)<-rownames(x1)
   rownames(dat_Mds)<-rownames(x1)
-  
-  # Assuming KL is a numeric matrix
-  diag_vals <- diag(dat_Mds)
-  
-  # Ensure diagonal values are non-negative
-  diag_vals <- pmax(diag_vals, 0)
-  
-  # Ensure dat_Mds values are non-negative
-  dat_Mds <- pmax(dat_Mds, 0)
-  
-  # Calculate the outer product of the diagonal values
-  outer_product <- outer(diag_vals, diag_vals, pmax)
-  
-  # Perform normalization by dividing dat_Mds by the outer product
-  dat_Mds <- dat_Mds / outer_product
-  
-  dat_Mds <- ifelse(dat_Mds<0.0000001, 0, (dat_Mds - min(dat_Mds)) / (max(dat_Mds) - min(dat_Mds)))
-  
-  dat_Mds
-  
-  
   dat_Mds
 }
 
