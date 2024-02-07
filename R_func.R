@@ -24,16 +24,14 @@ K.linear2 = function(x1,x2=x1){
 
 K.linear = function(x1,x2=x1){
   #centred by column
-  #x1<-scale(x1,scale=F)
-  x1<-scale(x1,scale=F)
-  SV<-sum(as.data.frame(x1)%>%summarize_all(var))
-  KL <- as.matrix(x1)%*%(t(as.matrix(x1)))
+  x1<-as.matrix(scale(x1,scale=F))
+  KL <- x1%*%(t(x1))
+  SV<-mean(diag(KL))
   KL<-KL/SV
-  
   KL
 }
 
-K.Polynomial=function(x1, x2=x1, gamma=1/length(x1), b=1, d=3){
+K.Polynomial2=function(x1, x2=x1, gamma=1/length(x1), b=1, d=3){
   PL <- (gamma*(as.matrix(x1)%*%t(x2))+b)^d
   
   # Assuming KL is a numeric matrix
@@ -57,12 +55,13 @@ K.Polynomial=function(x1, x2=x1, gamma=1/length(x1), b=1, d=3){
 }
 
 
-#K.Polynomial=function(x1, x2=x1, gamma=1/length(x1), b=1, d=3){
-#  x1<-scale(x1)
-#  PL <- (gamma*(as.matrix(x1)%*%t(x1))+b)^d
-#  PL<-PL/length(diag(PL))
-#  PL
-#}
+K.Polynomial=function(x1, x2=x1, gamma=1/length(x1), b=1, d=3){
+  x1<-as.matrix(scale(x1,scale=F))
+  PL <- (gamma*(x1%*%t(x1))+b)^d
+  SV<-mean(diag(PL))
+  PL<-PL/SV
+  PL
+}
 
 
 
