@@ -68,7 +68,7 @@ K.Polynomial=function(x1, x2=x1, gamma=1/length(x1), b=1, d=3){
 
 l2norm=function(x){sqrt(sum(x^2))}
 
-K.Gaussian=function(x1,x2=x1, gamma=1/length(x1)){
+K.Gaussian2=function(x1,x2=x1, gamma=1/length(x1)){
   gauss<-exp(-gamma*outer(1:nrow(x1<- as.matrix(x1)), 1:ncol(x2<- t(x2)),
                    Vectorize(function(i, j) l2norm(x1[i,]-x2[,j])^2)))
   colnames(gauss)<-rownames(x1)
@@ -93,6 +93,15 @@ K.Gaussian=function(x1,x2=x1, gamma=1/length(x1)){
 
   return(gauss)
 }
+
+K.Gaussian=function(x1,x2=x1, gamma=1/length(x1)){
+  gauss<-exp(-gamma*outer(1:nrow(x1<- as.matrix(x1)), 1:ncol(x2<- t(x2)),
+                          Vectorize(function(i, j) l2norm(x1[i,]-x2[,j])^2)))
+  colnames(gauss)<-rownames(x1)
+  rownames(gauss)<-rownames(x1)
+    return(gauss)
+}
+
 
 K.AK1_Final<-function(x1,x2=x1){
   n1<-nrow(x1)
