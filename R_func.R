@@ -103,7 +103,7 @@ K.Gaussian=function(x1,x2=x1, gamma=1/length(x1)){
 }
 
 
-K.AK1_Final<-function(x1,x2=x1){
+K.AK1_Final2<-function(x1,x2=x1){
   n1<-nrow(x1)
   n2<-nrow(x2)
   x1tx2<-as.matrix(x1)%*%t(x2)
@@ -141,6 +141,27 @@ K.AK1_Final<-function(x1,x2=x1){
   return(AK1)
 }
 
+K.AK1_Final<-function(x1,x2=x1){
+  n1<-nrow(x1)
+  n2<-nrow(x2)
+  x1tx2<-as.matrix(x1)%*%t(x2)
+  norm1<-sqrt(apply(x1,1,function(x) crossprod(x)))
+  norm2<-sqrt(apply(x2,1,function(x) crossprod(x)))
+  costheta = diag(1/norm1)%*%x1tx2%*%diag(1/norm2)
+  costheta[which(abs(costheta)>1,arr.ind = TRUE)] = 1
+  theta<-acos(costheta)
+  normxy<-as.matrix(norm1)%*%t(norm2)
+  J = (sin(theta)+(pi-theta)*cos(theta))
+  AK1 = 1/pi*normxy*J
+  AK1<-AK1/median(AK1)
+  colnames(AK1)<-rownames(x2)
+  rownames(AK1)<-rownames(x1)
+  SV=mean(diag(AK1))
+  AK1=AK1/SV
+  return(AK1)
+}
+
+
 MDS_fnc <- function(x1){
   matrix_E <- vegdist(x1, method="bray")
   MDS_mat<-pcoa(matrix_E)
@@ -171,6 +192,40 @@ MDS_fnc <- function(x1){
   
   dat_Mds
 }
+
+
+MDS_fnc <- function(x1){
+  matrix_E <- vegdist(x1, method="bray")
+  MDS_mat<-pcoa(matrix_E)
+  vec_mds<-as.data.frame(MDS_mat$vectors)
+  dat_Mds <- K.linear((vec_mds))
+  colnames(dat_Mds)<-rownames(x1)
+  rownames(dat_Mds)<-rownames(x1)
+  
+  # Assuming KL is a numeric matrix
+  diag_vals <- diag(dat_Mds)
+  
+  # Ensure diagonal values are non-negative
+  diag_vals <- pmax(diag_vals, 0)
+  
+  # Ensure dat_Mds values are non-negative
+  dat_Mds <- pmax(dat_Mds, 0)
+  
+  # Calculate the outer product of the diagonal values
+  outer_product <- outer(diag_vals, diag_vals, pmax)
+  
+  # Perform normalization by dividing dat_Mds by the outer product
+  dat_Mds <- dat_Mds / outer_product
+  
+  dat_Mds <- ifelse(dat_Mds<0.0000001, 0, (dat_Mds - min(dat_Mds)) / (max(dat_Mds) - min(dat_Mds)))
+  
+  dat_Mds
+  
+  
+  dat_Mds
+}
+
+
 
 DCA_fnc <- function(x1){
   matrix_E <- vegdist(x1, method="bray")
