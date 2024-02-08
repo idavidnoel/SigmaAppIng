@@ -260,7 +260,7 @@ DCA_fnc <- function(x1){
 }
 
 
-Euc_fnc <- function(x1){
+Euc_fnc2 <- function(x1){
   matrix_E <- vegdist(x1, method="euclidean")
   matrix_E <- as.matrix(matrix_E)
   
@@ -281,6 +281,16 @@ Euc_fnc <- function(x1){
   diag(matrix_E) <- 1
   
   matrix_E
+}
+
+
+Euc_fnc <- function(x1){
+  matrix_E <- vegdist(x1, method="euclidean")
+  matrix_E <- as.matrix(matrix_E)
+  #calculate the max diff=similarity of 0.1
+  s<-max(matrix_E)
+  if_else(matrix_E*(1-0.1)/s<1,1-matrix_E*(1-0.1)/s,1)
+   matrix_E
 }
 
 PLN_fnc <- function(x1){
