@@ -1,3 +1,17 @@
+center_kernel <- function(x) {
+  H <- diag(rep(1, times = ncol(x))) - 1 / ncol(x)
+  return(H %*% x %*% H)
+}
+normalize_kernel <- function(x) {
+  D <- diag(1/sqrt(diag(x)))
+  return(D %*% x %*% D)
+}
+
+scale_kernel_norm <- function(x) {
+  return(x / Matrix::norm(x, "F"))
+}
+
+
 K.linear2 = function(x1,x2=x1){
   KL <- as.matrix(x1)%*%(t(x2))*(1/length(x1))
   
@@ -21,8 +35,7 @@ K.linear2 = function(x1,x2=x1){
   KL
 }
 
-
-K.linear = function(x1,x2=x1){
+K.linear= function(x1){
   #centred by column
   x1<-as.matrix(scale(x1,scale=F))
   KL <- x1%*%(t(x1))
@@ -30,6 +43,7 @@ K.linear = function(x1,x2=x1){
   KL<-KL/SV
   KL
 }
+
 
 K.Polynomial2=function(x1, x2=x1, gamma=1/length(x1), b=1, d=3){
   PL <- (gamma*(as.matrix(x1)%*%t(x2))+b)^d
@@ -55,16 +69,13 @@ K.Polynomial2=function(x1, x2=x1, gamma=1/length(x1), b=1, d=3){
 }
 
 
-K.Polynomial=function(x1, x2=x1, gamma=1/length(x1), b=1, d=3){
+K.Polynomial=function(x1, x2=x1, gamma=1/length(x1), b=1, d=2){
   x1<-as.matrix(scale(x1,scale=F))
   PL <- (gamma*(x1%*%t(x1))+b)^d
   SV<-mean(diag(PL))
   PL<-PL/SV
   PL
 }
-
-
-
 
 l2norm=function(x){sqrt(sum(x^2))}
 
@@ -95,8 +106,9 @@ K.Gaussian2=function(x1,x2=x1, gamma=1/length(x1)){
 }
 
 K.Gaussian=function(x1,x2=x1, gamma=1/length(x1)){
-  gauss<-exp(-gamma*outer(1:nrow(x1<- as.matrix(x1)), 1:ncol(x2<- t(x2)),
-                          Vectorize(function(i, j) l2norm(x1[i,]-x2[,j])^2)))
+  x1<-as.matrix(scale(x1,scale=F))
+  gauss<-exp(-gamma*outer(1:nrow(x1<- as.matrix(x1)), 1:ncol(x1<- t(x1)),
+                          Vectorize(function(i, j) l2norm(x1[i,]-x1[,j])^2)))
   colnames(gauss)<-rownames(x1)
   rownames(gauss)<-rownames(x1)
     return(gauss)
@@ -206,7 +218,7 @@ MDS_fnc <- function(x1){
 
 
 
-DCA_fnc <- function(x1){
+DCA_fnc2 <- function(x1){
   matrix_E <- vegdist(x1, method="bray")
   dca_mat <- decorana(matrix_E)
   proj_dca <- as.data.frame(dca_mat$rproj)
@@ -233,6 +245,17 @@ DCA_fnc <- function(x1){
   
   dat_DCA
 }
+
+DCA_fnc <- function(x1){
+  matrix_E <- vegdist(x1, method="bray")
+  dca_mat <- decorana(matrix_E)
+  proj_dca <- as.data.frame(dca_mat$rproj)
+  dat_DCA <- K.linear((proj_dca))
+  colnames(dat_DCA)<-rownames(x1)
+  rownames(dat_DCA)<-rownames(x1)
+  dat_DCA
+}
+
 
 Euc_fnc <- function(x1){
   matrix_E <- vegdist(x1, method="euclidean")
