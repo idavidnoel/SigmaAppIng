@@ -106,9 +106,10 @@ K.Gaussian2=function(x1,x2=x1, gamma=1/length(x1)){
 }
 
 K.Gaussian=function(x1,x2=x1, gamma=1/length(x1)){
-  x1<-as.matrix(scale(x1,scale=F))
-  gauss<-exp(-gamma*outer(1:nrow(x1<- as.matrix(x1)), 1:ncol(x1<- t(x1)),
-                          Vectorize(function(i, j) l2norm(x1[i,]-x1[,j])^2)))
+  #not necessary to center the data
+  #x1<-as.matrix(scale(x1,scale=F))
+  gauss<-exp(-gamma*outer(1:nrow(x1<- as.matrix(x1)), 1:ncol(x2<- t(x2)),
+                          Vectorize(function(i, j) l2norm(x1[i,]-x2[,j])^2)))
   colnames(gauss)<-rownames(x1)
   rownames(gauss)<-rownames(x1)
     return(gauss)
@@ -154,6 +155,8 @@ K.AK1_Final2<-function(x1,x2=x1){
 }
 
 K.AK1_Final<-function(x1,x2=x1){
+  x1<-scale(x1,scale=F)
+  x2<-scale(x2,scale=F)
   n1<-nrow(x1)
   n2<-nrow(x2)
   x1tx2<-as.matrix(x1)%*%t(x2)
@@ -304,7 +307,6 @@ BC_fnc <- function(x1){
   matrix_E <- vegdist(x1, method="bray")
   matrix_E <- as.matrix(matrix_E)
   matrix_E <- 1-matrix_E
-  diag(matrix_E) <- 1
   matrix_E
 }
 
@@ -313,7 +315,6 @@ JC_fnc <- function(x1){
   matrix_E <- vegdist(x1, method="jaccard", binary = T)
   matrix_E <- as.matrix(matrix_E)
   matrix_E <- 1-matrix_E
-  diag(matrix_E) <- 1
   matrix_E
 }
 
