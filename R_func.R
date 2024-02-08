@@ -293,7 +293,7 @@ Euc_fnc <- function(x1){
   matrix_E
 }
 
-PLN_fnc <- function(x1){
+PLN_fnc2 <- function(x1){
   
   x1 <- as.matrix(x1)
   x1 <- t(x1)
@@ -311,6 +311,24 @@ PLN_fnc <- function(x1){
   
   PLN_res
 }
+
+PLN_fnc <- function(x1){
+  
+  x1 <- as.matrix(x1)
+  x1 <- t(x1)
+  x1 <- as.data.frame(x1)
+  x1$cov <- "2"
+  cov_tr <- as.data.frame(x1$cov)
+  rownames(cov_tr) <- rownames(x1)
+  x1<-x1[,!names(x1) %in% c("cov")]
+  
+  pln_data <- PLNmodels::prepare_data(x1[,1:length(x1)], cov_tr)
+  myPLN <- PLN(Abundance~1, data=pln_data)
+  PLN_res <- myPLN %>% sigma() 
+  PLN_res<-PLN_res/mean(diag(PLN_res))
+  PLN_res
+}
+
 
 
 BC_fnc <- function(x1){
