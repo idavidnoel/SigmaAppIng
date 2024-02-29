@@ -469,7 +469,12 @@ tabPanel(
 
 # Define the server
 server <- function(input, output, session) {
+  
+  #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  #######################################################
   # Read the uploaded data file
+  #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  #######################################################
   data <- reactive({
     req(input$datafile)
     read.csv(input$datafile$datapath, dec = ",", sep = ";", row.names = 1)
@@ -487,7 +492,11 @@ server <- function(input, output, session) {
     
   })
   
+  #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  #######################################################
   # Perform data imputation based on the selected method
+  #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  #######################################################
   imputedData <- reactive({
     if (is.null(Rdata()))
       return(NULL)
@@ -516,7 +525,11 @@ server <- function(input, output, session) {
     }
   })
   
+  #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  #######################################################
   # Calculate similarity matrix based on the selected method
+  #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  #######################################################
   similarityMatrix <- eventReactive(input$generateButton, {
     if (is.null(transformedData()))
       return(NULL)
@@ -559,12 +572,16 @@ server <- function(input, output, session) {
     similarityMatrix
   })
   
-  # Subset of similarity matrix
+  # Subset of similarity matrix 
   subsetMatrix <- reactive({
     subset(similarityMatrix(), select = c(1:5))
   })
   
+  #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  #######################################################
   # Generate subset similarity table for vizualisation
+  #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  #######################################################
   output$similarityTable <- renderTable({
     if (!is.null(similarityMatrix())) {
       subsetMatrixDF <- head(subsetMatrix(),5)
@@ -576,8 +593,11 @@ server <- function(input, output, session) {
     }
   })
   
-  
+  #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  #######################################################
   # Generate table comparing off-diagonal elements
+  #######################################################
+  #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   output$correlationTable <- renderTable({
     #req(input$compareButtonTable)
     
@@ -680,6 +700,12 @@ server <- function(input, output, session) {
    
   },rownames=T,spacing='m')
   
+  #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  #######################################################
+  #test outputs
+  #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  #######################################################
+  
   # Generate text output for similarity matrix
   output$text <- renderText({
     if (!is.null(similarityMatrix())) {
@@ -691,12 +717,14 @@ server <- function(input, output, session) {
   output$texttablecomp <- renderUI({
     methods <- input$selectedMethods
     numMethods <- length(methods)
-    
-    if (numMethods >= 2) {
-      str1<- "Correlation between off-diagonal elements above the diagonal"
-      str2<-"Average value of off-diagonal elements on the diagonal"
-      str3<-"Ratio between range of off-diagonal elements (row/column) below the diagonal"
-      HTML(paste(str1, str2,str3, sep = '<br/>'))
+    selectedMatrices <- input$selectedMatrices
+    SnumMethods <- length(selectedMatrices)
+    if (numMethods >= 2 | SnumMethods >= 2) {
+      str1<-"USING CORRELATION MATRICES"
+      str2<- "Correlation between off-diagonal elements above the diagonal"
+      str3<-"Average value of off-diagonal elements on the diagonal"
+      str4<-"Ratio between range of off-diagonal elements (row/column) below the diagonal"
+      HTML(paste(str1, str2,str3,str4, sep = '<br/>'))
     }
   })
   
@@ -710,7 +738,11 @@ server <- function(input, output, session) {
     }
   )
   
+  #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  #######################################################
   #plot of off-diagonal elements between methods
+  #######################################################
+  #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   observe({
   output$comparisonPlot <- renderPlot({
     #req(input$compareButtonPlot)
@@ -750,7 +782,7 @@ server <- function(input, output, session) {
         )
         
         rownames(similarityMatrix) <- colnames(similarityMatrix)
-        
+        similarityMatrix<-cov2cor(similarityMatrix)
         similarityMatrix
       })
       
@@ -776,8 +808,8 @@ server <- function(input, output, session) {
               geom_hex(bins=50) +
               labs(x = method1, y = method2) +
               theme_bw() +
-              xlim(0,1)+
-              ylim(0,1)+
+              xlim(-1,1)+
+              ylim(-1,1)+
               theme(plot.margin = margin(5, 5, 5, 5, "pt"),
                     plot.background = element_rect(fill = "white"),
                     panel.background = element_rect(fill = "white"),
@@ -824,20 +856,20 @@ server <- function(input, output, session) {
           method2 <- selectedMatrices[j]
           
           X<-as.numeric(unlist(values$matrixList[[selectedMatrices[i]]]))
-          mX<-matrix(ncol=sqrt(length(X)),nrow=sqrt(length(X)),X)
+          mX<-cov2cor(matrix(ncol=sqrt(length(X)),nrow=sqrt(length(X)),X))
           Xtri<-mX[upper.tri(mX,diag=F)]
           Y<-as.numeric(unlist(values$matrixList[[selectedMatrices[j]]]))
-          mY<-matrix(ncol=sqrt(length(Y)),nrow=sqrt(length(Y)),Y)
+          mY<-cov2cor(matrix(ncol=sqrt(length(Y)),nrow=sqrt(length(Y)),Y))
           Ytri<-mY[upper.tri(mY,diag=F)]
           plot_data <- data.frame(
-            X=Xtri,Y=Ytri)
+            Xtri=Xtri,Ytri=Ytri)
          if (nrow(plot_data) > 0) {
-            p <- ggplot(plot_data, aes(x = X, y = Y)) +
+            p <- ggplot(plot_data, aes(x = Xtri, y = Ytri)) +
               geom_hex(bins=50) +
               labs(x = method1, y = method2) +
               theme_bw() +
-              xlim(0,1)+
-              ylim(0,1)+
+              xlim(-1,1)+
+              ylim(-1,1)+
               theme(plot.margin = margin(5, 5, 5, 5, "pt"),
                     plot.background = element_rect(fill = "white"),
                     panel.background = element_rect(fill = "white"),
@@ -872,7 +904,11 @@ server <- function(input, output, session) {
                 round(length(input$selectedMatrices)*(length(input$selectedMatrices)-1)/4+0.1,0))*250)
 })
 
-  # visualization similarity matrices using corrplot
+  #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  #######################################################
+  # visualization cor(similarity matrices) using corrplot
+  #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  #######################################################
  observe({
    output$comparisonCorrPlot <- renderPlot({
     #req(input$compareButtonCorrPlot)
@@ -912,14 +948,14 @@ server <- function(input, output, session) {
           stop("Invalid method selected.")
         )
         
-        correlationMatrix <- similarityMatrix
+        correlationMatrix <- cov2cor(similarityMatrix)
         norma_data <- correlationMatrix #(1+correlationMatrix)/2
         melted_data <- melt(norma_data)
         ggplot(data = melted_data, aes(x = as.numeric(Var1), y = as.numeric(Var2), fill = value)) +
           geom_tile() +
           labs(x = "", y = "") +
           theme_bw() +
-          scale_fill_gradientn(colours = c("blue", "white", "red"), limit = c(0,1))+
+          scale_fill_gradientn(colours = c("blue", "white", "red"), limit = c(-1,1))+
           ggtitle(method)+  # Add the method name as the plot title 
           theme(plot.margin = margin(20, 20, 20, 20, "pt"),
                 plot.background = element_rect(fill = "white"),
@@ -944,7 +980,7 @@ server <- function(input, output, session) {
       plots <- lapply(selectedMatrices, function(matrixName) {
         h <- unlist(values$matrixList[[matrixName]])
         p <- matrix(h,nrow = sqrt(length(h)),ncol = sqrt(length(h)))
-        correlationMatrix <- p
+        correlationMatrix <- cov2cor(p)
         
         norma_data <- correlationMatrix #(1+correlationMatrix)/2
         melted_data <- melt(norma_data)
@@ -953,7 +989,7 @@ server <- function(input, output, session) {
           geom_tile() +
           labs(x = "", y = "") +
           theme_bw() +
-          scale_fill_gradientn(colours = c("blue", "white", "red"), limit = c(0,1))+
+          scale_fill_gradientn(colours = c("blue", "white", "red"), limit = c(-1,1))+
           ggtitle(matrixName)+  # Add the method name as the plot title 
           theme(plot.margin = margin(20, 20, 20, 20, "pt"),
                 plot.background = element_rect(fill = "white"),

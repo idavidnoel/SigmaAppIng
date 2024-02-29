@@ -69,7 +69,7 @@ K.Polynomial2=function(x1, x2=x1, gamma=1/length(x1), b=1, d=3){
 }
 
 
-K.Polynomial=function(x1, x2=x1, gamma=1/length(x1), b=1, d=2){
+K.Polynomial=function(x1, x2=x1, gamma=1/length(x1), b=1, d=3){
   x1<-as.matrix(scale(x1,scale=F))
   PL <- (gamma*(x1%*%t(x1))+b)^d
   SV<-mean(diag(PL))
