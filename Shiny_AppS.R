@@ -510,7 +510,12 @@ server <- function(input, output, session) {
     }
   })
   
+  #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  #######################################################
   # Perform data transformation based on the selected method
+  #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  #######################################################
+  
   transformedData <- reactive({
     if (input$transformation == "None") {
       imputedData()
@@ -645,8 +650,12 @@ server <- function(input, output, session) {
       for (i in 1:numMethods) {
         for (j in i:numMethods) {
        #   correlationValue <- cor(c(similarityMatrices[[i]]), c(similarityMatrices[[j]]))
-          Xtri<-similarityMatrices[[i]][upper.tri(similarityMatrices[[i]],diag=F)]
-          Ytri<-similarityMatrices[[j]][upper.tri(similarityMatrices[[j]],diag=F)]
+          Matcor1<-cov2cor(similarityMatrices[[i]])
+          Matcor2<-cov2cor(similarityMatrices[[j]])
+          Xtri<-Matcor1[upper.tri(Matcor1,diag=F)]
+          Ytri<-Matcor2[upper.tri(Matcor2,diag=F)]
+          #Xtri<-similarityMatrices[[i]][upper.tri(similarityMatrices[[i]],diag=F)]
+          #Ytri<-similarityMatrices[[j]][upper.tri(similarityMatrices[[j]],diag=F)]
           correlationValue <- cor(Xtri,Ytri)
           ratioValue<-(max(Ytri)-min(Ytri))/(max(Xtri)-min(Xtri))
           if (i!=j){
