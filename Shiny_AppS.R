@@ -24,6 +24,9 @@ library(ggplot2)
 library(gridExtra)
 library(PLNmodels)
 library(patchwork)
+library(Ryacas) # for the TeXForm command
+library(Ryacas0)
+library(mathjaxr)
 source(file = 'R_func.R')
 
 
@@ -218,16 +221,19 @@ tabPanel(
     div(
       style="text-align:center;",
       h1(tags$span("Method justifications",
-                   style = "font-family: Times New Roman ; font-size: 42px; color: #b30000;font-weight: 700;"))
+                   style = "font-family: Times New Roman ; font-size: 32px; color: #b30000;font-weight: 700;")),
+      uiOutput("formulagen")
     ),
     fluidRow(
       column(
         width = 10,
         tags$h2("Linear Kernel (LK)",
-                style = "font-size:26px; text-decoration:underline;"),
-        shinyjs::hidden(
-          tags$p("Also known as the cross product or Ross matrix, the linear kernel is a suitable choice when the data exhibits a linear pattern. It works well when the data change proportionally.",
-                 tags$br(),
+                style = "font-size:20px; text-decoration:underline;"),
+        uiOutput("formulaKlin"),
+        shinyjs::hidden(tags$p( 
+         #"Also known as the cross product or Ross matrix, the linear kernel is a suitable choice when the data exhibits a linear pattern. It works well when the data change proportionally.",
+                
+                tags$br(),
                  tags$br(),
                  tags$strong("Ross et al., 2013:"), " ", tags$em("Metagenomic Predictions: From Microbiome to Complex Health and Environmental Phenotypes in Humans and Cattle"),
                  tags$br(),
@@ -246,7 +252,8 @@ tabPanel(
       column(
         width = 10,
         tags$h2("Polynomial Kernel (PK)",
-                style = "font-size:26px; text-decoration:underline;"),
+                style = "font-size:20px; text-decoration:underline;"),
+        uiOutput("formulaKpol"),
         shinyjs::hidden(
           tags$p("The polynomial kernel is preferable when the data shows nonlinear relationships. It allows us to capture intricate interactions and higher-order relationships among features.",
                  tags$br(),
@@ -268,7 +275,8 @@ tabPanel(
       column(
         width = 10,
         tags$h2("Gaussian Kernel (GK)",
-                style = "font-size:26px; text-decoration:underline;"),
+                style = "font-size:20px; text-decoration:underline;"),
+        uiOutput("formulaKgau"),
         shinyjs::hidden(
           tags$p("The Gaussian kernel is a suitable choice when the data exhibits a Gaussian-like distribution or when there are local interactions between features. It can capture subtle variations and provide a more nuanced assessment of heritability by giving more importance to samples with similar composition.",
                  tags$br(),
@@ -290,7 +298,8 @@ tabPanel(
       column(
         width = 10,
         tags$h2("Arc-Cosine Kernel (AK1)",
-                style = "font-size:26px; text-decoration:underline;"),
+                style = "font-size:20px; text-decoration:underline;"),
+        uiOutput("formulaAK"),
         shinyjs::hidden(
           p("The arc-cosine kernel is preferred when the data represents relative abundances or compositional data. It effectively captures the compositional nature of the data by handling the inherent constraints of proportions.",
             tags$br(),
@@ -312,7 +321,8 @@ tabPanel(
       column(
         width = 10,
         tags$h2("Poisson Log Normal method (PLN)",
-                style = "font-size:26px; text-decoration:underline;"),
+                style = "font-size:20px; text-decoration:underline;"),
+        uiOutput("formulaPLN"),
         shinyjs::hidden(
           tags$p("The Poisson Log Normal (PLN) method can be used to analyze data, whether it is relative or not, due to its ability to address two key characteristics of such data: count-based nature and overdispersion.",
                  tags$br(),
@@ -330,7 +340,9 @@ tabPanel(
       column(
         width = 10,
         tags$h2("Jaccard",
-                style = "font-size:26px; text-decoration:underline;"),
+                
+                style = "font-size:20px; text-decoration:underline;"),
+        uiOutput("formulaJac"),
         shinyjs::hidden(
           p("The Jaccard distance is commonly used to analyze data, whether it's relative or absolute, due to its simplicity and robustness. It compares the presence or absence of features between samples, disregarding abundance levels, making it suitable for diverse datasets. Not recommended to treat compositional data.",
             tags$br(),
@@ -352,7 +364,9 @@ tabPanel(
       column(
         width = 10,
         tags$h2("Bray-Curtis",
-                style = "font-size:26px; text-decoration:underline;"),
+                
+                style = "font-size:20px; text-decoration:underline;"),
+        uiOutput("formulaBC"),
         shinyjs::hidden(
           p("The Bray-Curtis distance is a valuable metric to treat and analyze data due to its ability to capture both the presence/absence and relative abundance of features. Not recommended to treat compositional data.",
             tags$br(),
@@ -374,7 +388,9 @@ tabPanel(
       column(
         width = 10,
         tags$h2("Euclidean/Aitchison",
-                style = "font-size:26px; text-decoration:underline;"),
+                
+                style = "font-size:20px; text-decoration:underline;"),
+        uiOutput("formulaEuc"),
         shinyjs::hidden(
           p("The Euclidean distance is the most basic distance. When used on CLR transformed data, it is called Aitchison distance. The Aitchison distance is known to handle compositional data, meaning data in which the abundance of one species is dependent on others, and the Aitchison distance accounts for this constraint. It also enables meaningful comparisons and dissimilarity analysis between microbial samples, allowing for the exploration of genetic factors and heritability in microbial abundance variations.",
             tags$br(),
@@ -396,7 +412,9 @@ tabPanel(
       column(
         width = 10,
         tags$h2("MultiDimensionalScaling (MDS)",
-                style = "font-size:26px; text-decoration:underline;"),
+                
+                style = "font-size:20px; text-decoration:underline;"),
+        uiOutput("formulaMDS"),
         shinyjs::hidden(
           p("MDS (Multidimensional Scaling) is used to treat and analyze data because it allows for the visualization of similarities or dissimilarities between samples based on their microbial composition, providing a comprehensive overview of the dataset. MDS reduces the dimensionality of the data while preserving pairwise distances, it exacerbates discrimination between samples and/or group of samples.",
             tags$br(),
@@ -414,7 +432,9 @@ tabPanel(
       column(
         width = 10,
         tags$h2("Detrended Correpondence Analysis (DCA)",
-                style = "font-size:26px; text-decoration:underline;"),
+                
+                style = "font-size:20px; text-decoration:underline;"),
+        uiOutput("formulaDCA"),
         shinyjs::hidden(
           p("DCA (Detrended Correspondence Analysis) is used to analyze data due to its ability to capture complex nonlinear relationships or gradients in the dataset. By decomposing the variance in the data, DCA reveals the main trends or gradients present in the microbial communities, allowing for the interpretation of underlying patterns. It also exacerbates discrimination between samples and/or group of samples.",
             tags$br(),
@@ -469,6 +489,83 @@ tabPanel(
 
 # Define the server
 server <- function(input, output, session) {
+  
+  #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  #######################################################
+  # text explaining the methods
+  #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  #######################################################
+  output$formulagen <- renderUI({
+    withMathJax("we consider as input a \\(n*p \\) matrix \\( \\mathbf{X}  \\) of data, individuals in line, measurements in column.
+                The aim is to computed the similarity matrix \\( \\mathbf{K}  \\) using different methods")
+  })
+  output$formulaKlin <- renderUI({
+    withMathJax("\\( \\mathbf{X}  \\) is centered by column, 
+    $$\\mathbf{K}=\\mathbf{X}\\mathbf{X'}$$
+    then \\( \\mathbf{K} \\) is standardized :  
+    $$\\mathbf{K}=\\frac{\\mathbf{K}}{sum(diag(\\mathbf{K}))}$$")
+  })
+  output$formulaKpol <- renderUI({
+    withMathJax("\\( \\mathbf{X}  \\) is centered by column,
+    $$\\mathbf{K}(\\mathbf{x}_i,\\mathbf{x}_j)=( \\gamma \\mathbf{x}_i\\mathbf{x}'_j + a )^d$$
+    with \\(a=1,d=3 \\) and user-defined \\(\\gamma \\), default value \\(\\gamma=\\frac{1}{p} \\)
+    then \\( \\mathbf{K} \\) is standardized :  
+    $$\\mathbf{K}=\\frac{\\mathbf{K}}{sum(diag(\\mathbf{K}))}$$")
+  })
+  output$formulaKgau <- renderUI({
+    withMathJax("
+    $$\\mathbf{K}(\\mathbf{x}_i,\\mathbf{x}_j)=e^{-\\gamma||\\mathbf{x}_i-\\mathbf{x}||_j^2}$$
+    with user-defined \\(\\gamma \\), default value \\(\\gamma=\\frac{1}{p} \\)")
+  })
+  output$formulaAK <- renderUI({
+    withMathJax("\\( \\mathbf{X}  \\) is centered by column,
+    $$\\mathbf{K}(\\mathbf{x}_i,\\mathbf{x}_j)=
+    \\frac{1}{\\pi}||\\mathbf{x}_i||||\\mathbf{x}_j||\\mathbf{J}(\\theta_{ij})$$
+    where \\(\\theta_{ij}=cos^{-1}(\\frac{\\mathbf{x}_i\\mathbf{x}_j}{||\\mathbf{x}_i||||\\mathbf{x}_j||}) \\) and
+                \\(\\mathbf{J}(\\theta_{ij})=[sin(\\theta_{ij})+(\\pi-\\theta_{ij})cos(\\theta_{ij})] \\) "
+    )
+  })
+  output$formulaEuc <- renderUI({
+    withMathJax("First the matrix of euclidian distances is calculated as: 
+                $$\\mathbf{Euc}(i,j)<-||\\mathbf{x}_i-\\mathbf{x}_j||_2$$
+                Then distances are transformed into similarities, considering that the minimal 
+                similarity is equal to 0.1 (associated with the maximal distance)
+                $$\\mathbf{K}=\\mathbf{J}-\\frac{0.9\\mathbf{Euc}}{max(\\mathbf{Euc})}$$"
+    )
+  })
+  output$formulaBC <- renderUI({
+    withMathJax("The similarity matrix based on the Bray-Curtis measure of dissimilarity is computed as:
+                $$\\mathbf{K_{ij}}=\\frac{2\\sum_{k=1}^{p}min(X_{ik},X_{jk})}{\\sum_{k=1}^{p}(X_{ik}+X_{jk})} $$"
+    )
+  })
+  output$formulaJac <- renderUI({
+    withMathJax("The similarity matrix based on the Jaccard index consists in counting the number of elements in common between individuals. It is computed as:
+                $$\\mathbf{K_{ij}}=\\frac{\\mathbf{x}_i\\cap\\mathbf{x}_j}{\\mathbf{x}_i\\cup\\mathbf{x}_j}$$"
+    )
+  })
+  output$formulaMDS <- renderUI({
+    withMathJax("First the Bray-curtis dissimilarity matrix is computed, then a pricipal coordinate decomposition of this distance matrix is performed. 
+                Kernel linear similarity matrix of the matrix composed of the principal coordinates is then computed 
+                $$\\mathbf{X}\\Rightarrow\\mathbf{BC}\\Rightarrow\\mathbf{vectorsPcoA}\\Rightarrow linear  kernel$$ 
+                
+                "
+    
+                )
+  })
+  output$formulaDCA <- renderUI({
+    withMathJax("First the Bray-curtis dissimilarity matrix is computed, then a detrended correspondence analysis of this distance matrix is performed. 
+                Kernel linear similarity matrix of the matrix composed of the principal coordinates is then computed 
+                $$\\mathbf{X}\\Rightarrow\\mathbf{BC}\\Rightarrow\\mathbf{vectorsDCA}\\Rightarrow linear  kernel$$ 
+                  
+                  "
+    )
+  })
+  output$formulaPLN <- renderUI({
+    withMathJax("Use poisson distribution to model count data. It considers individual effect as a random term in the model with covariance matrix \\( \\mathbf{K} \\)
+                The model is:
+                $$X_{ij}|\\tau_i\\sim Poisson(exp(o_{j}+\\tau_i)),\\mathbf{\\tau}\\sim N(0,\\mathbf{K})$$"
+    )
+  })
   
   #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   #######################################################
