@@ -229,225 +229,83 @@ tabPanel(
         width = 10,
         tags$h2("Linear Kernel (LK)",
                 style = "font-size:20px; text-decoration:underline;"),
-        uiOutput("formulaKlin"),
-        shinyjs::hidden(tags$p( 
-         #"Also known as the cross product or Ross matrix, the linear kernel is a suitable choice when the data exhibits a linear pattern. It works well when the data change proportionally.",
-                
-                tags$br(),
-                 tags$br(),
-                 tags$strong("Ross et al., 2013:"), " ", tags$em("Metagenomic Predictions: From Microbiome to Complex Health and Environmental Phenotypes in Humans and Cattle"),
-                 tags$br(),
-                 tags$strong(tags$a("https://doi.org/10.1371/journal.pone.0073056", href = "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0073056")),
-                 tags$br(),
-                 tags$strong("Montesinos-Lopez et al., 2021:"), " ", tags$em( "A guide for kernel generalized regression methods for genomic-enabled prediction"),
-                 tags$br(),
-                 tags$strong(tags$a("https://doi.org/10.1038/s41437-021-00412-1", href = "https://www.nature.com/articles/s41437-021-00412-1")),
-                 id = "linearJustification",
-                 style = "font-size:20px;")
-        ),
-        actionButton("toggleLinearButton", "Toggle Linear Justification")
-      )
-    ),
+        useShinyjs(), 
+        uiOutput("formulaKlin")
+      )),
+    
     fluidRow(
       column(
         width = 10,
         tags$h2("Polynomial Kernel (PK)",
                 style = "font-size:20px; text-decoration:underline;"),
-        uiOutput("formulaKpol"),
-        shinyjs::hidden(
-          tags$p("The polynomial kernel is preferable when the data shows nonlinear relationships. It allows us to capture intricate interactions and higher-order relationships among features.",
-                 tags$br(),
-                 tags$br(),
-                 tags$strong("Montesinos-Lopez et al., 2021:")," " , tags$em("A guide for kernel generalized regression methods for genomic-enabled prediction"),
-                 tags$br(),
-                 tags$strong(tags$a("https://doi.org/10.1038/s41437-021-00412-1", href = "https://www.nature.com/articles/s41437-021-00412-1")),
-                 tags$br(),
-                 tags$strong("He et al., 2022:"), " ", tags$em("Exploring methods to summarize gut microbiota composition for microbiability estimation and phenotypic prediction in swine"),
-                 tags$br(),
-                 tags$strong(tags$a("https://doi.org/10.1093/jas/skac231", href = "https://academic.oup.com/jas/article/100/9/skac231/6623959?login=true")),
-                 id = "polynomialJustification",
-                 style = "font-size:20px;")
-        ),
-        actionButton("togglePolynomialButton", "Toggle Polynomial Justification")
-      )
-    ),
+        useShinyjs(),
+        uiOutput("formulaKpol")
+        )),
     fluidRow(
       column(
         width = 10,
-        tags$h2("Gaussian Kernel (GK)",
+        tags$h2("Gaussian Kernel (PK)",
                 style = "font-size:20px; text-decoration:underline;"),
-        uiOutput("formulaKgau"),
-        shinyjs::hidden(
-          tags$p("The Gaussian kernel is a suitable choice when the data exhibits a Gaussian-like distribution or when there are local interactions between features. It can capture subtle variations and provide a more nuanced assessment of heritability by giving more importance to samples with similar composition.",
-                 tags$br(),
-                 tags$br(),
-                 tags$strong("Montesinos-Lopez et al., 2021:")," " , tags$em("A guide for kernel generalized regression methods for genomic-enabled prediction"),
-                 tags$br(),
-                 tags$strong(tags$a("https://doi.org/10.1038/s41437-021-00412-1", href = "https://www.nature.com/articles/s41437-021-00412-1")),
-                 tags$br(),
-                 tags$strong("He et al., 2022:"), " ", tags$em("Exploring methods to summarize gut microbiota composition for microbiability estimation and phenotypic prediction in swine"),
-                 tags$br(),
-                 tags$strong(tags$a("https://doi.org/10.1093/jas/skac231", href = "https://academic.oup.com/jas/article/100/9/skac231/6623959?login=true")),
-                 id = "gaussianJustification",
-                 style = "font-size:20px;")
-        ),
-        actionButton("toggleGaussianButton", "Toggle Gaussian Justification")
-      )
-    ),
+        useShinyjs(),
+        uiOutput("formulaKgau")
+      )),
     fluidRow(
       column(
         width = 10,
-        tags$h2("Arc-Cosine Kernel (AK1)",
+        tags$h2("Arc-Cosine Kernel (PK)",
                 style = "font-size:20px; text-decoration:underline;"),
-        uiOutput("formulaAK"),
-        shinyjs::hidden(
-          p("The arc-cosine kernel is preferred when the data represents relative abundances or compositional data. It effectively captures the compositional nature of the data by handling the inherent constraints of proportions.",
-            tags$br(),
-            tags$br(),
-            tags$strong("Montesinos-Lopez et al., 2021:")," " , tags$em("A guide for kernel generalized regression methods for genomic-enabled prediction"),
-            tags$br(),
-            tags$strong(tags$a("https://doi.org/10.1038/s41437-021-00412-1", href = "https://www.nature.com/articles/s41437-021-00412-1")),
-            tags$br(),
-            tags$strong("He et al., 2022:"), " ", tags$em("Exploring methods to summarize gut microbiota composition for microbiability estimation and phenotypic prediction in swine"),
-            tags$br(),
-            tags$strong(tags$a("https://doi.org/10.1093/jas/skac231", href = "https://academic.oup.com/jas/article/100/9/skac231/6623959?login=true")),
-            id = "arcCosineJustification",
-            style = "font-size:20px;")
-        ),
-        actionButton("toggleArcCosineButton", "Toggle Arc-Cosine Justification")
-      )
-    ),
+        useShinyjs(),
+        uiOutput("formulaAK")
+      )),
     fluidRow(
       column(
         width = 10,
         tags$h2("Poisson Log Normal method (PLN)",
                 style = "font-size:20px; text-decoration:underline;"),
-        uiOutput("formulaPLN"),
-        shinyjs::hidden(
-          tags$p("The Poisson Log Normal (PLN) method can be used to analyze data, whether it is relative or not, due to its ability to address two key characteristics of such data: count-based nature and overdispersion.",
-                 tags$br(),
-                 tags$br(),
-                 tags$strong("Chiquet et al., 2021:"), " ", tags$em("The Poisson-Lognormal Model as a Versatile Framework for the Joint Analysis of Species Abundances"),
-                 tags$br(),
-                 tags$strong(tags$a("https://doi.org/10.3389/fevo.2021.588292", href = "https://www.frontiersin.org/articles/10.3389/fevo.2021.588292/full")),
-                 id = "PLNJustification",
-                 style = "font-size:20px;")
-        ),
-        actionButton("togglePLNButton", "Toggle PLN Justification")
-      )
-    ),
+        useShinyjs(),
+        uiOutput("formulaPLN")
+      )),
     fluidRow(
       column(
         width = 10,
         tags$h2("Jaccard",
-                
                 style = "font-size:20px; text-decoration:underline;"),
-        uiOutput("formulaJac"),
-        shinyjs::hidden(
-          p("The Jaccard distance is commonly used to analyze data, whether it's relative or absolute, due to its simplicity and robustness. It compares the presence or absence of features between samples, disregarding abundance levels, making it suitable for diverse datasets. Not recommended to treat compositional data.",
-            tags$br(),
-            tags$br(),
-            tags$strong("Dixon et al., 2003:"), " ", tags$em("VEGAN, a package of R functions for community ecology"),
-            tags$br(),
-            tags$strong(tags$a("https://doi.org/10.1016/S0377-8401(03)00204-9", href = "https://www.sciencedirect.com/science/article/pii/S0377840103002049?via%3Dihub")),
-            tags$br(),
-            tags$strong("Gloor et al., 2017:"), " ", tags$em("Microbiome Datasets Are Compositional: And This Is Not Optional"),
-            tags$br(),
-            tags$strong(tags$a("https://doi.org/10.3389/fmicb.2017.02224", href = "https://www.frontiersin.org/articles/10.3389/fmicb.2017.02224/full")),
-            id = "jaccardJustification",
-            style = "font-size:20px;")
-        ),
-        actionButton("toggleJaccardButton", "Toggle Jaccard Justification")
-      )
-    ),
+        useShinyjs(),
+        uiOutput("formulaJac")
+      )),
+        
     fluidRow(
       column(
         width = 10,
         tags$h2("Bray-Curtis",
-                
                 style = "font-size:20px; text-decoration:underline;"),
-        uiOutput("formulaBC"),
-        shinyjs::hidden(
-          p("The Bray-Curtis distance is a valuable metric to treat and analyze data due to its ability to capture both the presence/absence and relative abundance of features. Not recommended to treat compositional data.",
-            tags$br(),
-            tags$br(),
-            tags$strong("Dixon et al., 2003:"), " ", tags$em("VEGAN, a package of R functions for community ecology"),
-            tags$br(),
-            tags$strong(tags$a("https://doi.org/10.1016/S0377-8401(03)00204-9", href = "https://www.sciencedirect.com/science/article/pii/S0377840103002049?via%3Dihub")),
-            tags$br(),
-            tags$strong("Gloor et al., 2017:"), " ", tags$em("Microbiome Datasets Are Compositional: And This Is Not Optional"),
-            tags$br(),
-            tags$strong(tags$a("https://doi.org/10.3389/fmicb.2017.02224", href = "https://www.frontiersin.org/articles/10.3389/fmicb.2017.02224/full")),
-            id = "bcJustification",
-            style = "font-size:20px;")
-        ),
-        actionButton("toggleBCButton", "Toggle Bray-Curtis Justification")
-      )
-    ),
+        useShinyjs(),
+        uiOutput("formulaBC")
+        )),
     fluidRow(
       column(
         width = 10,
         tags$h2("Euclidean/Aitchison",
-                
-                style = "font-size:20px; text-decoration:underline;"),
-        uiOutput("formulaEuc"),
-        shinyjs::hidden(
-          p("The Euclidean distance is the most basic distance. When used on CLR transformed data, it is called Aitchison distance. The Aitchison distance is known to handle compositional data, meaning data in which the abundance of one species is dependent on others, and the Aitchison distance accounts for this constraint. It also enables meaningful comparisons and dissimilarity analysis between microbial samples, allowing for the exploration of genetic factors and heritability in microbial abundance variations.",
-            tags$br(),
-            tags$br(),
-            tags$strong("Gloor et al., 2017:"), " ", tags$em("Microbiome Datasets Are Compositional: And This Is Not Optional"),
-            tags$br(),
-            tags$strong(tags$a("https://doi.org/10.3389/fmicb.2017.02224", href = "https://www.frontiersin.org/articles/10.3389/fmicb.2017.02224/full")),
-            tags$br(),
-            tags$strong("Greenacre et al., 2022:")," ", tags$em("Aitchison's Compositional Data Analysis 40 Years On: A Reappraisal"),
-            tags$br(),
-            tags$strong(tags$a("https://doi.org/10.48550/arXiv.2201.05197", href = "https://arxiv.org/abs/2201.05197")),
-            id = "aitJustification",
-            style = "font-size:20px;")
-        ),
-        actionButton("toggleAitButton", "Toggle Aitchison Justification")
-      )
-    ),
+                        style = "font-size:20px; text-decoration:underline;"),
+        useShinyjs(),
+        uiOutput("formulaEuc")
+    )),
     fluidRow(
       column(
         width = 10,
         tags$h2("MultiDimensionalScaling (MDS)",
-                
-                style = "font-size:20px; text-decoration:underline;"),
-        uiOutput("formulaMDS"),
-        shinyjs::hidden(
-          p("MDS (Multidimensional Scaling) is used to treat and analyze data because it allows for the visualization of similarities or dissimilarities between samples based on their microbial composition, providing a comprehensive overview of the dataset. MDS reduces the dimensionality of the data while preserving pairwise distances, it exacerbates discrimination between samples and/or group of samples.",
-            tags$br(),
-            tags$br(),
-            tags$strong("He et al., 2022:"), " ", tags$em("Exploring methods to summarize gut microbiota composition for microbiability estimation and phenotypic prediction in swine"),
-            tags$br(),
-            tags$strong(tags$a("https://doi.org/10.1093/jas/skac231", href = "https://academic.oup.com/jas/article/100/9/skac231/6623959?login=true")),
-            id = "mdsJustification",
-            style = "font-size:20px;")
-        ),
-        actionButton("toggleMDSButton", "Toggle MDS Justification")
-      )
-    ),
+                        style = "font-size:20px; text-decoration:underline;"),
+        useShinyjs(),
+        uiOutput("formulaMDS")
+        )),
     fluidRow(
       column(
         width = 10,
         tags$h2("Detrended Correpondence Analysis (DCA)",
-                
-                style = "font-size:20px; text-decoration:underline;"),
-        uiOutput("formulaDCA"),
-        shinyjs::hidden(
-          p("DCA (Detrended Correspondence Analysis) is used to analyze data due to its ability to capture complex nonlinear relationships or gradients in the dataset. By decomposing the variance in the data, DCA reveals the main trends or gradients present in the microbial communities, allowing for the interpretation of underlying patterns. It also exacerbates discrimination between samples and/or group of samples.",
-            tags$br(),
-            tags$br(),
-            tags$strong("He et al., 2022:"), " ", tags$em("Exploring methods to summarize gut microbiota composition for microbiability estimation and phenotypic prediction in swine"),
-            tags$br(),
-            tags$strong(tags$a("https://doi.org/10.1093/jas/skac231", href = "https://academic.oup.com/jas/article/100/9/skac231/6623959?login=true")),
-            id = "dcaJustification",
-            style = "font-size:20px;")
-        ),
-        actionButton("toggleDCAButton", "Toggle DCA Justification")
-      )
-    )
+               style = "font-size:20px; text-decoration:underline;"),
+        useShinyjs(),
+        uiOutput("formulaDCA")
+      ))
   )
 ),
 
@@ -500,72 +358,218 @@ server <- function(input, output, session) {
                 The aim is to computed the similarity matrix \\( \\mathbf{K}  \\) using different methods")
   })
   output$formulaKlin <- renderUI({
-    withMathJax("\\( \\mathbf{X}  \\) is centered by column, 
+      mainPanel(
+        a(id = "Klin", "Show/hide information"),
+        hidden(
+          div(id = "tKlin",
+              withMathJax("\\( \\mathbf{X}  \\) is centered by column, 
     $$\\mathbf{K}=\\mathbf{X}\\mathbf{X'}$$
     then \\( \\mathbf{K} \\) is standardized :  
-    $$\\mathbf{K}=\\frac{\\mathbf{K}}{sum(diag(\\mathbf{K}))}$$")
-  })
+    $$\\mathbf{K}=\\frac{\\mathbf{K}}{sum(diag(\\mathbf{K}))}$$"),
+              tags$br(),
+              tags$strong("Ross et al., 2013:"), " ", tags$em("Metagenomic Predictions: From Microbiome to Complex Health and Environmental Phenotypes in Humans and Cattle"),
+              tags$br(),
+              tags$strong(tags$a("https://doi.org/10.1371/journal.pone.0073056", href = "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0073056")),
+              tags$br(),
+              tags$strong("Montesinos-Lopez et al., 2021:"), " ", tags$em( "A guide for kernel generalized regression methods for genomic-enabled prediction"),
+              tags$br(),
+              tags$strong(tags$a("https://doi.org/10.1038/s41437-021-00412-1", href = "https://www.nature.com/articles/s41437-021-00412-1"))
+          )))})
+  onclick("Klin", 
+          toggle(id = "tKlin", anim = TRUE))
+  
   output$formulaKpol <- renderUI({
+    mainPanel(
+      a(id = "Kpol", "Show/hide information"),
+      hidden(
+        div(id = "tKpol",
     withMathJax("\\( \\mathbf{X}  \\) is centered by column,
     $$\\mathbf{K}(\\mathbf{x}_i,\\mathbf{x}_j)=( \\gamma \\mathbf{x}_i\\mathbf{x}'_j + a )^d$$
     with \\(a=1,d=3 \\) and user-defined \\(\\gamma \\), default value \\(\\gamma=\\frac{1}{p} \\)
     then \\( \\mathbf{K} \\) is standardized :  
-    $$\\mathbf{K}=\\frac{\\mathbf{K}}{sum(diag(\\mathbf{K}))}$$")
-  })
+    $$\\mathbf{K}=\\frac{\\mathbf{K}}{sum(diag(\\mathbf{K}))}$$"),
+             tags$br(),
+             tags$strong("Montesinos-Lopez et al., 2021:")," " , tags$em("A guide for kernel generalized regression methods for genomic-enabled prediction"),
+             tags$br(),
+             tags$strong(tags$a("https://doi.org/10.1038/s41437-021-00412-1", href = "https://www.nature.com/articles/s41437-021-00412-1")),
+             tags$br(),
+             tags$strong("He et al., 2022:"), " ", tags$em("Exploring methods to summarize gut microbiota composition for microbiability estimation and phenotypic prediction in swine"),
+             tags$br(),
+             tags$strong(tags$a("https://doi.org/10.1093/jas/skac231", href = "https://academic.oup.com/jas/article/100/9/skac231/6623959?login=true"))
+        )))})
+  onclick("Kpol", 
+          toggle(id = "tKpol", anim = TRUE))
+  
+  
+  
   output$formulaKgau <- renderUI({
-    withMathJax("
+    mainPanel(
+      a(id = "Kgau", "Show/hide information"),
+      hidden(
+        div(id = "tKgau",
+        withMathJax("
     $$\\mathbf{K}(\\mathbf{x}_i,\\mathbf{x}_j)=e^{-\\gamma||\\mathbf{x}_i-\\mathbf{x}||_j^2}$$
-    with user-defined \\(\\gamma \\), default value \\(\\gamma=\\frac{1}{p} \\)")
-  })
+    with user-defined \\(\\gamma \\), default value \\(\\gamma=\\frac{1}{p} \\)"),
+        tags$br(),
+        tags$strong("Montesinos-Lopez et al., 2021:")," " , tags$em("A guide for kernel generalized regression methods for genomic-enabled prediction"),
+        tags$br(),
+        tags$strong(tags$a("https://doi.org/10.1038/s41437-021-00412-1", href = "https://www.nature.com/articles/s41437-021-00412-1")),
+        tags$br(),
+        tags$strong("He et al., 2022:"), " ", tags$em("Exploring methods to summarize gut microbiota composition for microbiability estimation and phenotypic prediction in swine"),
+        tags$br(),
+        tags$strong(tags$a("https://doi.org/10.1093/jas/skac231", href = "https://academic.oup.com/jas/article/100/9/skac231/6623959?login=true"))
+        
+        )))})
+  onclick("Kgau", 
+          toggle(id = "tKgau", anim = TRUE))
+  
+  
+  
   output$formulaAK <- renderUI({
+    mainPanel(
+      a(id = "KAK", "Show/hide information"),
+      hidden(
+        div(id = "tKAK",
     withMathJax("\\( \\mathbf{X}  \\) is centered by column,
     $$\\mathbf{K}(\\mathbf{x}_i,\\mathbf{x}_j)=
     \\frac{1}{\\pi}||\\mathbf{x}_i||||\\mathbf{x}_j||\\mathbf{J}(\\theta_{ij})$$
     where \\(\\theta_{ij}=cos^{-1}(\\frac{\\mathbf{x}_i\\mathbf{x}_j}{||\\mathbf{x}_i||||\\mathbf{x}_j||}) \\) and
-                \\(\\mathbf{J}(\\theta_{ij})=[sin(\\theta_{ij})+(\\pi-\\theta_{ij})cos(\\theta_{ij})] \\) "
-    )
-  })
+                \\(\\mathbf{J}(\\theta_{ij})=[sin(\\theta_{ij})+(\\pi-\\theta_{ij})cos(\\theta_{ij})] \\) "),
+    tags$br(),
+    tags$strong("Montesinos-Lopez et al., 2021:")," " , tags$em("A guide for kernel generalized regression methods for genomic-enabled prediction"),
+    tags$br(),
+    tags$strong(tags$a("https://doi.org/10.1038/s41437-021-00412-1", href = "https://www.nature.com/articles/s41437-021-00412-1")),
+    tags$br(),
+    tags$strong("He et al., 2022:"), " ", tags$em("Exploring methods to summarize gut microbiota composition for microbiability estimation and phenotypic prediction in swine"),
+    tags$br(),
+    tags$strong(tags$a("https://doi.org/10.1093/jas/skac231", href = "https://academic.oup.com/jas/article/100/9/skac231/6623959?login=true"))
+  )))})
+onclick("KAK", 
+        toggle(id = "tKAK", anim = TRUE))
+
+
+
   output$formulaEuc <- renderUI({
+    mainPanel(
+      a(id = "Euc", "Show/hide information"),
+      hidden(
+        div(id = "tEuc",
     withMathJax("First the matrix of euclidian distances is calculated as: 
                 $$\\mathbf{Euc}(i,j)<-||\\mathbf{x}_i-\\mathbf{x}_j||_2$$
                 Then distances are transformed into similarities, considering that the minimal 
-                similarity is equal to 0.1 (associated with the maximal distance)
-                $$\\mathbf{K}=\\mathbf{J}-\\frac{0.9\\mathbf{Euc}}{max(\\mathbf{Euc})}$$"
-    )
-  })
+                similarity is equal to 0.1 (associated with the maximal distance)"),
+    tags$br(),
+    tags$br(),
+    tags$strong("Gloor et al., 2017:"), " ", tags$em("Microbiome Datasets Are Compositional: And This Is Not Optional"),
+    tags$br(),
+    tags$strong(tags$a("https://doi.org/10.3389/fmicb.2017.02224", href = "https://www.frontiersin.org/articles/10.3389/fmicb.2017.02224/full")),
+    tags$br(),
+    tags$strong("Greenacre et al., 2022:")," ", tags$em("Aitchison's Compositional Data Analysis 40 Years On: A Reappraisal"),
+    tags$br(),
+    tags$strong(tags$a("https://doi.org/10.48550/arXiv.2201.05197", href = "https://arxiv.org/abs/2201.05197"))
+    
+   )))})
+onclick("Euc", 
+        toggle(id = "tEuc", anim = TRUE))
+
   output$formulaBC <- renderUI({
+    mainPanel(
+      a(id = "BC", "Show/hide information"),
+      hidden(
+        div(id = "tBC",
     withMathJax("The similarity matrix based on the Bray-Curtis measure of dissimilarity is computed as:
-                $$\\mathbf{K_{ij}}=\\frac{2\\sum_{k=1}^{p}min(X_{ik},X_{jk})}{\\sum_{k=1}^{p}(X_{ik}+X_{jk})} $$"
-    )
-  })
+                $$\\mathbf{K_{ij}}=\\frac{2\\sum_{k=1}^{p}min(X_{ik},X_{jk})}{\\sum_{k=1}^{p}(X_{ik}+X_{jk})} $$"),
+    tags$br(),
+    tags$br(),
+    tags$strong("Dixon et al., 2003:"), " ", tags$em("VEGAN, a package of R functions for community ecology"),
+    tags$br(),
+    tags$strong(tags$a("https://doi.org/10.1016/S0377-8401(03)00204-9", href = "https://www.sciencedirect.com/science/article/pii/S0377840103002049?via%3Dihub")),
+    tags$br(),
+    tags$strong("Gloor et al., 2017:"), " ", tags$em("Microbiome Datasets Are Compositional: And This Is Not Optional"),
+    tags$br(),
+    tags$strong(tags$a("https://doi.org/10.3389/fmicb.2017.02224", href = "https://www.frontiersin.org/articles/10.3389/fmicb.2017.02224/full"))
+            )))})
+  onclick("BC", 
+          toggle(id = "tEuc", anim = TRUE))
+  
+  
   output$formulaJac <- renderUI({
+    mainPanel(
+      a(id = "Jac", "Show/hide information"),
+      hidden(
+        div(id = "tJac",
     withMathJax("The similarity matrix based on the Jaccard index consists in counting the number of elements in common between individuals. It is computed as:
-                $$\\mathbf{K_{ij}}=\\frac{\\mathbf{x}_i\\cap\\mathbf{x}_j}{\\mathbf{x}_i\\cup\\mathbf{x}_j}$$"
-    )
-  })
+                $$\\mathbf{K_{ij}}=\\frac{\\mathbf{x}_i\\cap\\mathbf{x}_j}{\\mathbf{x}_i\\cup\\mathbf{x}_j}$$"),
+      tags$br(),
+        tags$br(),
+        tags$strong("Dixon et al., 2003:"), " ", tags$em("VEGAN, a package of R functions for community ecology"),
+        tags$br(),
+        tags$strong(tags$a("https://doi.org/10.1016/S0377-8401(03)00204-9", href = "https://www.sciencedirect.com/science/article/pii/S0377840103002049?via%3Dihub")),
+        tags$br(),
+        tags$strong("Gloor et al., 2017:"), " ", tags$em("Microbiome Datasets Are Compositional: And This Is Not Optional"),
+        tags$br(),
+        tags$strong(tags$a("https://doi.org/10.3389/fmicb.2017.02224", href = "https://www.frontiersin.org/articles/10.3389/fmicb.2017.02224/full"))
+  )))})
+onclick("Jac", 
+        toggle(id = "tJac", anim = TRUE))
+
+
   output$formulaMDS <- renderUI({
+    mainPanel(
+    a(id = "MDS", "Show/hide information"),
+    hidden(
+      div(id = "tMDS",
     withMathJax("First the Bray-curtis dissimilarity matrix is computed, then a pricipal coordinate decomposition of this distance matrix is performed. 
                 Kernel linear similarity matrix of the matrix composed of the principal coordinates is then computed 
                 $$\\mathbf{X}\\Rightarrow\\mathbf{BC}\\Rightarrow\\mathbf{vectorsPcoA}\\Rightarrow linear  kernel$$ 
                 
-                "
+                "),
+    tags$br(),
+    tags$br(),
+    tags$strong("He et al., 2022:"), " ", tags$em("Exploring methods to summarize gut microbiota composition for microbiability estimation and phenotypic prediction in swine"),
+    tags$br(),
+    tags$strong(tags$a("https://doi.org/10.1093/jas/skac231", href = "https://academic.oup.com/jas/article/100/9/skac231/6623959?login=true"))
     
-                )
-  })
+      )))})
+  onclick("MDS", 
+          toggle(id = "tMDS", anim = TRUE))
+  
   output$formulaDCA <- renderUI({
+    mainPanel(
+      a(id = "DCA", "Show/hide information"),
+      hidden(
+        div(id = "tDCA",
     withMathJax("First the Bray-curtis dissimilarity matrix is computed, then a detrended correspondence analysis of this distance matrix is performed. 
                 Kernel linear similarity matrix of the matrix composed of the principal coordinates is then computed 
                 $$\\mathbf{X}\\Rightarrow\\mathbf{BC}\\Rightarrow\\mathbf{vectorsDCA}\\Rightarrow linear  kernel$$ 
                   
-                  "
-    )
-  })
+                  "),
+    tags$br(),
+    tags$br(),
+    tags$strong("He et al., 2022:"), " ", tags$em("Exploring methods to summarize gut microbiota composition for microbiability estimation and phenotypic prediction in swine"),
+    tags$br(),
+    tags$strong(tags$a("https://doi.org/10.1093/jas/skac231", href = "https://academic.oup.com/jas/article/100/9/skac231/6623959?login=true"))
+    
+        )))})
+  onclick("DCA", 
+          toggle(id = "tDCA", anim = TRUE))
+  
   output$formulaPLN <- renderUI({
+    mainPanel(
+      a(id = "PLN", "Show/hide information"),
+      hidden(
+        div(id = "tPLN",
     withMathJax("Use poisson distribution to model count data. It considers individual effect as a random term in the model with covariance matrix \\( \\mathbf{K} \\)
                 The model is:
-                $$X_{ij}|\\tau_i\\sim Poisson(exp(o_{j}+\\tau_i)),\\mathbf{\\tau}\\sim N(0,\\mathbf{K})$$"
-    )
-  })
+                $$X_{ij}|\\tau_i\\sim Poisson(exp(o_{j}+\\tau_i)),\\mathbf{\\tau}\\sim N(0,\\mathbf{K})$$"),
+    tags$br(),
+    tags$br(),
+    tags$strong("Chiquet et al., 2021:"), " ", tags$em("The Poisson-Lognormal Model as a Versatile Framework for the Joint Analysis of Species Abundances"),
+    tags$br(),
+    tags$strong(tags$a("https://doi.org/10.3389/fevo.2021.588292", href = "https://www.frontiersin.org/articles/10.3389/fevo.2021.588292/full"))
+  )))})
+onclick("PLN", 
+        toggle(id = "tPLN", anim = TRUE))
   
   #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   #######################################################
