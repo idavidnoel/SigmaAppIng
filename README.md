@@ -177,4 +177,4 @@ R Script which creates the tool. It is composed of 4 different panels. The first
 
 ## Contact
 
-If there is any issue, you can contact me using the following adresses: julien.guibert@inrae.fr (until the 30/06) or Julien.Guibert3@outlook.fr (after the 30/06).
+If there is any issue, you can contact ingrid.david@inrae.fr
