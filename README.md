@@ -1,3 +1,6 @@
+$${\color{red} New \space version \space with \space bugs \space fixed }$$
+<p align="center"> https://forgemia.inra.fr/ingrid.david/compsim </p>
+
 # SigmaApp
 Tool to build similarity matrices and to compare them.
 
